@@ -1,0 +1,555 @@
+{  
+   "":"2.0",
+   "info":{  
+      "description":"Api Documentation",
+      "version":"1.0",
+      "title":"Api Documentation",
+      "termsOfService":"urn:tos",
+      "contact":{  
+
+      },
+      "license":{  
+         "name":"Apache 2.0",
+         "url":"http://www.apache.org/licenses/LICENSE-2.0"
+      }
+   },
+   "host":"localhost:8444",
+   "basePath":"/",
+   "tags":[  
+      {  
+         "name":"basic-error-controller",
+         "description":"Basic Error Controller"
+      },
+      {  
+         "name":"goods-api-controller",
+         "description":"Goods Api Controller"
+      },
+      {  
+         "name":"image-api-controller",
+         "description":"Image Api Controller"
+      },
+      {  
+         "name":"mobile-confirm-api-controller",
+         "description":"Mobile Confirm Api Controller"
+      },
+      {  
+         "name":"store-api-controller",
+         "description":"Store Api Controller"
+      },
+      {  
+         "name":"user-api-controller",
+         "description":"User Api Controller"
+      }
+   ],
+   "paths":{  
+      "/accessToken":{  
+         "post":{  
+            "tags":[  
+               "user-api-controller"
+            ],
+            "summary":"accessToken",
+            "description":"Check `accessToken` **user** 는 사용자 정보 값이다. 리턴 값은 사용자 정보 오브젝트 이다.",
+            "operationId":"accessTokenUsingPOST",
+            "consumes":[  
+               "application/json"
+            ],
+            "produces":[  
+               "application/json;charset=UTF-8",
+               "text/html;charset=UTF-8"
+            ],
+            "parameters":[  
+               {  
+                  "in":"body",
+                  "name":"user",
+                  "description":"멤버 정보",
+                  "required":true,
+                  "schema":{  
+                     "$ref":"#/definitions/User"
+                  }
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"Responseful response",
+                  "schema":{  
+                     "$ref":"#/definitions/User"
+                  }
+               },
+               "201":{  
+                  "description":"Created"
+               },
+               "400":{  
+                  "description":"Request error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               },
+               "500":{  
+                  "description":"Internal error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/api/v3/image/upload":{  
+         "post":{  
+            "tags":[  
+               "image-api-controller"
+            ],
+            "summary":"upload",
+            "operationId":"uploadUsingPOST",
+            "consumes":[  
+               "multipart/form-data"
+            ],
+            "produces":[  
+               "*/*"
+            ],
+            "parameters":[  
+               {  
+                  "name":"file",
+                  "in":"formData",
+                  "description":"file",
+                  "required":true,
+                  "type":"file"
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"OK",
+                  "schema":{  
+                     "type":"object"
+                  }
+               },
+               "201":{  
+                  "description":"Created"
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               }
+            }
+         }
+      },
+      "/api/v3/goods/add":{  
+         "post":{  
+            "tags":[  
+               "goods-api-controller"
+            ],
+            "summary":"addGoods",
+            "description":"add `Goods` **goods** 는 상품 정보 값이다. 리턴 값은 성공/실패 여부 판단 값이다. ",
+            "operationId":"addGoodsUsingPOST",
+            "consumes":[  
+               "application/json"
+            ],
+            "produces":[  
+               "application/json;charset=UTF-8",
+               "text/html;charset=UTF-8"
+            ],
+            "parameters":[  
+               {  
+                  "in":"body",
+                  "name":"goods",
+                  "description":"상품 정보",
+                  "required":true,
+                  "schema":{  
+                     "$ref":"#/definitions/Goods"
+                  }
+               },
+               {  
+                  "name":"files",
+                  "in":"query",
+                  "required":false,
+                  "type":"array",
+                  "items":{  
+                     "type":"file"
+                  },
+                  "collectionFormat":"multi"
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"Responseful response",
+                  "schema":{  
+                     "$ref":"#/definitions/Store"
+                  }
+               },
+               "201":{  
+                  "description":"Created"
+               },
+               "400":{  
+                  "description":"Request error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               },
+               "500":{  
+                  "description":"Internal error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/api/v3/goods/update":{  
+         "put":{  
+            "tags":[  
+               "goods-api-controller"
+            ],
+            "summary":"updateGoods",
+            "description":"update `Goods` **goods** 는 상품 정보 값이다. 리턴 값은 성공/실패 여부 판단 값이다. ",
+            "operationId":"updateGoodsUsingPUT",
+            "consumes":[  
+               "application/json"
+            ],
+            "produces":[  
+               "application/json;charset=UTF-8",
+               "text/html;charset=UTF-8"
+            ],
+            "parameters":[  
+               {  
+                  "in":"body",
+                  "name":"goods",
+                  "description":"상품 정보",
+                  "required":true,
+                  "schema":{  
+                     "$ref":"#/definitions/Goods"
+                  }
+               },
+               {  
+                  "name":"files",
+                  "in":"query",
+                  "required":false,
+                  "type":"array",
+                  "items":{  
+                     "type":"file"
+                  },
+                  "collectionFormat":"multi"
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"Responseful response",
+                  "schema":{  
+                     "$ref":"#/definitions/Goods"
+                  }
+               },
+               "201":{  
+                  "description":"Created"
+               },
+               "400":{  
+                  "description":"Request error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               },
+               "500":{  
+                  "description":"Internal error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/api/v3/goods/{storeId}/":{  
+         "get":{  
+            "tags":[  
+               "goods-api-controller"
+            ],
+            "summary":"addGoods",
+            "description":"get `Goods` **goods** 는 상품 정보 값이다. 리턴 값은 goods List 이다. ",
+            "operationId":"addGoodsUsingGET",
+            "produces":[  
+               "application/json;charset=UTF-8",
+               "text/html;charset=UTF-8"
+            ],
+            "parameters":[  
+               {  
+                  "name":"storeId",
+                  "in":"path",
+                  "description":"상점 ID",
+                  "required":true,
+                  "type":"string"
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"Responseful response",
+                  "schema":{  
+                     "$ref":"#/definitions/Store"
+                  }
+               },
+               "400":{  
+                  "description":"Request error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               },
+               "500":{  
+                  "description":"Internal error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/api/v3/store/add":{  
+         "post":{  
+            "tags":[  
+               "store-api-controller"
+            ],
+            "summary":"addStore",
+            "description":"add `Store` **store** 는 상점 정보 값이다. 리턴 값은 성공/실패 여부 판단 값이다. ",
+            "operationId":"addStoreUsingPOST",
+            "consumes":[  
+               "application/json"
+            ],
+            "produces":[  
+               "application/json;charset=UTF-8",
+               "text/html;charset=UTF-8"
+            ],
+            "parameters":[  
+               {  
+                  "in":"body",
+                  "name":"store",
+                  "description":"상점 정보",
+                  "required":true,
+                  "schema":{  
+                     "$ref":"#/definitions/Store"
+                  }
+               },
+               {  
+                  "name":"files",
+                  "in":"query",
+                  "required":false,
+                  "type":"array",
+                  "items":{  
+                     "type":"file"
+                  },
+                  "collectionFormat":"multi"
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"Responseful response",
+                  "schema":{  
+                     "$ref":"#/definitions/Store"
+                  }
+               },
+               "201":{  
+                  "description":"Created"
+               },
+               "400":{  
+                  "description":"Request error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               },
+               "500":{  
+                  "description":"Internal error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/api/v3/store/around/{pageno}/":{  
+         "post":{  
+            "tags":[  
+               "store-api-controller"
+            ],
+            "summary":"aroundStore",
+            "description":"around list `Store` **List** 는 상점 정보 리스트 값이다 리턴 값은 성공/실패 여부 판단 값이다. ",
+            "operationId":"aroundStoreUsingPOST",
+            "consumes":[  
+               "application/json"
+            ],
+            "produces":[  
+               "application/json;charset=UTF-8",
+               "text/html;charset=UTF-8"
+            ],
+            "parameters":[  
+               {  
+                  "name":"pageno",
+                  "in":"path",
+                  "description":"페이지 번호",
+                  "required":true,
+                  "type":"integer",
+                  "format":"int32"
+               },
+               {  
+                  "in":"body",
+                  "name":"position",
+                  "description":"사용자 위치(GPS)",
+                  "required":true,
+                  "schema":{  
+                     "type":"string"
+                  }
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"Responseful response",
+                  "schema":{  
+                     "$ref":"#/definitions/Store"
+                  }
+               },
+               "201":{  
+                  "description":"Created"
+               },
+               "400":{  
+                  "description":"Request error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               },
+               "500":{  
+                  "description":"Internal error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/api/v3/store/update":{  
+         "put":{  
+            "tags":[  
+               "store-api-controller"
+            ],
+            "summary":"updateStore",
+            "description":"update `Store` **store** 는 상점 정보 값이다. 리턴 값은 성공/실패 여부 판단 값이다. ",
+            "operationId":"updateStoreUsingPUT",
+            "consumes":[  
+               "application/json"
+            ],
+            "produces":[  
+               "application/json;charset=UTF-8",
+               "text/html;charset=UTF-8"
+            ],
+            "parameters":[  
+               {  
+                  "in":"body",
+                  "name":"store",
+                  "description":"상점 정보",
+                  "required":true,
+                  "schema":{  
+                     "$ref":"#/definitions/Store"
+                  }
+               },
+               {  
+                  "name":"files",
+                  "in":"query",
+                  "required":false,
+                  "type":"array",
+                  "items":{  
+                     "type":"file"
+                  },
+                  "collectionFormat":"multi"
+               }
+            ],
+            "responses":{  
+               "200":{  
+                  "description":"Responseful response",
+                  "schema":{  
+                     "$ref":"#/definitions/Store"
+                  }
+               },
+               "201":{  
+                  "description":"Created"
+               },
+               "400":{  
+                  "description":"Request error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               },
+               "401":{  
+                  "description":"Unauthorized"
+               },
+               "403":{  
+                  "description":"Forbidden"
+               },
+               "404":{  
+                  "description":"Not Found"
+               },
+               "500":{  
+                  "description":"Internal error",
+                  "schema":{  
+                     "$ref":"#/definitions/Error"
+                  }
+               }
+            }
+         }
+      },
+      "/api/v3/store/user/{pageno}/":{  
+         "post":{  
+            "tags":[  
+               "store-api-controller"
+            ],
+            "summary":"myStore",
+            "description":"            my list `Store` **List

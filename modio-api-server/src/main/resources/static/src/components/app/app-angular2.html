@@ -1,0 +1,92 @@
+<div id="header" role="banner">
+
+  <div id="preloader">
+    <div id="load"></div>
+  </div>
+  
+    <!-- div ng-show="AILoading" class="preloader">
+	    <div id="preloader">
+	    	<div id="load"></div>
+	  	</div>
+    </div-->
+  <div ng-hide="AILoading" ng-view></div>
+  
+  <div id="header-inner">
+
+    <div id="logo">
+      <a href="/"><!-- img alt="solidmodel" src="/img/logo.jpg"--><h1>SolidModel</h1></a>
+    </div>
+
+    <a href="#nav" id="toggle-nav" (click)="navOpen()"><i class="fa fa-bars fa-2x"></i></a> 
+
+    <ul id="nav" role="navigation">
+      <li id="t-search" role="search">
+          <input class="search-text placeholder" type="text" id="search_text" placeholder="&#xF002; Search " value="" 
+          			onkeypress="if(event.keyCode==13) {
+									window.location.href='/#/searchcontents?search_text=' + document.getElementById('search_text').value; 
+									return false;
+								}">
+      </li>     
+      <template [ngIf]="accessToken == null">
+        <li id="t-signup">
+          <a [routerLink]="['/Signup']"><b>회원가입</b></a>
+        </li>
+        <li id="t-signin">
+          <a [routerLink]="['/Login']"><span><b>로그인</b></span></a>      
+        </li>
+      </template>
+      <template [ngIf]="accessToken != null">
+      	<li id="t-w3c">
+          <a href="https://validator.kldp.org/" target="_blank"><b>W3C 평가</b></a>
+        </li>
+        <li id="t-exit">
+          <a [routerLink]="['/Deleteuser']"><b>회원정보 탈퇴</b></a>
+        </li>
+        <li id="t-signupdate">
+          <a [routerLink]="['/Modifieduser']"><b>회원정보 변경</b></a>
+        </li>
+        <li id="t-logout">
+          <a href="#" (click)="logout()"><span><b>로그아웃</b></span></a>      
+        </li>
+      </template>
+
+	 <template [ngIf]="accessToken != null">
+      <li id="t-upload">
+        <a [routerLink]="['/Upload']"><span><b>업로드</b></span></a>      
+      </li>
+      </template>
+      
+
+      
+
+      <li id="t-main">
+        <a class="" [routerLink]="['/Main']"><b>메인 콘텐츠</b><!--b class="caret"></b--></a>
+      </li>
+      
+      <template [ngIf]="accessToken != null">
+      <li id="t-content">
+        <a class="" [routerLink]="['/Mycontents']"><b>나의 콘텐츠</b><!--b class="caret"></b--></a>
+      </li>
+      <li id="t-content">
+        <a class="" [routerLink]="['/Sharecontents']"><b>공유이력</b><!--b class="caret"></b--></a>
+      </li>
+      <li id="t-content">
+        <a class="" [routerLink]="['/Home']"><b>...</b><!--b class="caret"></b--></a>
+      </li>
+      </template>
+      
+      <!-- li id="t-content">
+        <a class="has-sub" routerLink="['/Upload]">업로드</a>
+      </li-->
+      <!-- li id="t-user">
+        <a class="has-sub" href="/user">회원정보<b class="caret"></a>
+        <ul class="tabs">
+		  <li><a href="/userUpdate">정보수정</a></li>
+		  <li><a href="/findPassword">암호찾기</a></li>	
+		  <li class="separate"><a href="/exit">회원탈퇴</a></li>
+		</ul>
+	  </li-->
+    </ul>
+  </div>
+  <router-outlet></router-outlet>
+</div> <!-- /header -->

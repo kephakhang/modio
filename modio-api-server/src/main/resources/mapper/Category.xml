@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Category">
+
+	<!-- 사용자 관리 관련 쿼리 START -->
+	
+	<select id="select" parameterType="Integer" resultType="category">
+		select * from TB_CATEGORY where id = #{id}
+	</select>
+	
+	<select id="selectList" parameterType="category" resultType="category">
+		<![CDATA[
+		select *
+                from TB_CATEGORY
+                order by code
+		]]>
+	</select>
+	
+	<select id="count" resultType="Integer">
+		select count(1) from TB_CATEGORY
+	</select>
+	
+	<insert id="insert" parameterType="category">
+	INSERT INTO TB_CATEGORY ( name )
+	VALUES (#{name})
+	</insert>
+	
+	<update id="update" parameterType="category">
+	UPDATE TB_CATEGORY
+		SET name = #{name}
+	WHERE id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="category">
+	DELETE FROM TB_CATEGORY WHERE id = #{id}
+	</delete>
+	
+	<!-- 메뉴관리 관련 쿼리 END -->
+	
+</mapper>

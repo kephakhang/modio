@@ -1,0 +1,3 @@
+#!/bin/sh
+nohup mvn spring-boot:run -Drun.arguments="--modio.server.name=api" | /usr/local/Cellar/cronolog/1.6.2/sbin/cronolog -S ./logs/RUN.log -P ./logs/RUN.log.old  ./logs/RUN.-%Y-%m-%d.log &
+tail -f ./logs/RUN.log

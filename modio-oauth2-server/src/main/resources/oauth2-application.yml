@@ -1,0 +1,145 @@
+spring:
+  profiles:
+    active: local
+  session:
+    store-type: none
+  messages:
+    basename: messages/messages
+  mvc:
+    dispatch-options-request: true
+  data:
+    mongodb:
+      #uri: mongodb://localhost/
+      host: localhost
+      port: 27017
+      database: modio
+      username: modio
+      password: modio
+      repositories.enabled: true
+  http:
+    multipart:
+      maxFileSize: 100Mb
+      maxRequestSize: 100Mb
+      location: '/Users/peter/Documents/Modio/upload'
+      fileSizeThreshold: 0
+
+
+server:
+  port: 8443
+  tomcat.max-http-header-size: 104857600
+  ssl:
+    key-store: './https-cert/youngplussoft_com.jks'
+    key-store-password: '123Yps#@!'
+    key-password: '123Yps#@!'
+#    key-alias: 'youngplussoft_com'
+    trust-store: './https-cert/modioTrustStore.key'
+    trust-store-password: '123Yps#@!'
+
+#spring.h2.console:
+#  enabled: true
+#  path: /h2-console
+#
+# 외부 DB 설정시 아래의 주석을 활성화 시킨 후 관련 DB 설정 정보를 입력한다.
+#spring:
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/api;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password:
+# DataSource
+#spring.datasource:
+#  driver-class-name: com.mysql.jdbc.Driver
+#  url: 'jdbc:mysql://localhost:3306/modio?autoReconnect=true&?verifyServerCertificate=false&useSSL=false'
+#  username: 0soft
+#  password: 0soft
+  
+#
+# MongoDB data
+
+#security:
+#  resource:
+#    token-info-uri: http://localhost:8443/oauth/check_token
+#  oauth2:
+#    client:
+#      client-id: 233668646673605
+#      client-secret: 33b17e044ee6a4fa383f46ec6e28ea1d
+#      accessTokenUri: https://localhost:8443/oauth/access_token
+#      userAuthorizationUri: https://localhost:8443/dialog/oauth
+#      tokenName: oauth_token
+#      authenticationScheme: query
+#      clientAuthenticationScheme: form
+#    authorization:
+#      token-key-access: isAuthenticated()
+#      check-token-access: isAuthenticated()
+#    jwt:
+#      key-uri: http://localhost:8443/oauth/token_key
+#    resource:
+#      jwt.key-uri: https://localhost:8443/oauth/token_key
+#      #userInfoUri: https://localhost:8443/api/v2/user
+#  user:
+#    name: user
+#    password: test
+log4j.logger.org.thymeleaf: DEBUG
+logging:
+  path: ./logs
+  file: RUN.log
+  pattern.file: RUN.%d{yyyyMMdd}.log
+  level:
+    root: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.hibernate: DEBUG
+    org.springframework:
+      security: DEBUG
+      boot: DEBUG
+      web: DEBUG
+    com.youngplussoft: DEBUG
+    java.sql:
+      Statement: DEBUG
+      PreparedStatement: DEBUG
+
+
+#spring.datasource.schema=import.sql
+#mybatis:
+#  config-location: 'classpath:mybatis-config.xml'
+
+
+#    io.swagger: DEBUG
+#    org.apache.ibatis: DEBUG
+#    org.mybatis: DEBUG
+#    org.apache.ibatis=DEBUG
+
+
+#logging.config=classpath:logback-spring.xml
+#
+#
+
+#spring.mvc.view.prefix=/WEB-INF/jsp/
+#spring.mvc.view.suffix=.jsp
+# MULTIPART (MultipartProperties)
+
+#modio settings
+modio:
+  upload.location: /Users/peter/Documents/Modio/upload
+  image.location: /Users/peter/Documents/Modio/images
+  email:
+    sender: 'contact@youngplussoft.com'
+    server: 'smtps.daum.net'
+    user: 'sunwon40@youngplussoft.com'
+    password: '123yps#@!'
+    starttls: false
+    protocol: smtps
+  remail:
+    type: pop3
+    receiver: 'mgkaki@youngplussoft.com'
+    server: yally.com
+    user: mgkaki
+    password: '123mgk#@!'
+    protocol: pop
+    port: 110
+    ssl: false
+    tmp: /tmp/
+
+
+---
+spring:
+  profiles: dev

@@ -1,0 +1,231 @@
+
+<style>
+.wizard {
+    margin: 20px auto;
+    background: #fff;
+}
+
+.wizard .nav-tabs {
+    position: relative;
+    margin: 40px auto;
+    margin-bottom: 0;
+    border-bottom-color: #e0e0e0;
+}
+
+.wizard > div.wizard-inner {
+    position: relative;
+}
+
+.connecting-line {
+    height: 2px;
+    background: #e0e0e0;
+    position: absolute;
+    width: 70%;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 30%;
+    z-index: 1;
+}
+
+.wizard .nav-tabs > li.active > a, .wizard .nav-tabs > li.active > a:hover, .wizard .nav-tabs > li.active > a:focus {
+    color: #555555;
+    cursor: default;
+    border: 0;
+    border-bottom-color: transparent;
+}
+
+span.round-tab {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    display: inline-block;
+    border-radius: 100px;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    z-index: 2;
+    /* position: absolute; */
+    left: 0;
+    text-align: center;
+    font-size: 25px;
+}
+span.round-tab i{
+    color:#555555;
+}
+.wizard li.active span.round-tab {
+    background: #fff;
+    border: 2px solid #5bc0de;
+    
+}
+.wizard li.active span.round-tab i{
+    color: #5bc0de;
+}
+
+span.round-tab:hover {
+    color: #333;
+    border: 2px solid #333;
+}
+
+.wizard .nav-tabs > li {
+    width: 33% ;
+    height: 110px; 
+    float: left ;
+    text-align: center;
+    z-index:7;
+    position: relative;
+    display: block;
+}
+
+.wizard li:after {
+    content: " ";
+    position: absolute;
+    left: 47%;
+    opacity: 0;
+    margin: 0 auto;
+    bottom: 0px;
+    border: 5px solid transparent;
+    border-bottom-color: #5bc0de;
+    transition: 0.1s ease-in-out;
+}
+
+.wizard li.active:after {
+    content: " ";
+    position: absolute;
+    left: 47%;
+    opacity: 1;
+    margin: 0 auto;
+    bottom: 0px;
+    border: 10px solid transparent;
+    border-bottom-color: #5bc0de;
+}
+
+.wizard .nav-tabs > li a {
+    width: 70px;
+    height: 70px;
+    margin: 20px auto;
+    border-radius: 100%;
+    padding: 0;
+}
+
+.wizard .nav-tabs > li a:hover {
+    background: transparent;
+}
+
+.wizard .tab-pane {
+    position: relative;
+    padding-top: 50px;
+}
+
+.wizard h1 {
+    margin-top: 0;
+}
+
+.signup-title {
+  	width:100%;
+  	text-align: center ;
+}
+
+li a.disabled {
+	pointer-events: none;
+   	cursor: default;
+}
+
+#fregister h2 {
+	font-size: 2.0em;
+}
+
+
+.radio-group {
+	border: 1px solid #ccc;
+    border-radius: .25rem;
+    padding: 10px;
+    height:50px ;
+}
+
+.radio-group span {
+	float: left;
+	width: 50% ;
+}
+
+.radio-group span .radio {
+	float:left ;
+	width: 30px;
+}
+
+.radio-group span .label {
+	float:left ;
+}
+
+
+/*
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
+*/
+
+@media( max-width : 585px ) {
+
+	.wizard .nav-tabs > li {
+	    width: 33% ;
+	    height: 70px; 
+	    float: left ;
+	    text-align: center;
+	    z-index:7;
+	    position: relative;
+	    display: block;
+	}
+	
+
+    .wizard {
+        width: 90%;
+        height: auto !important;
+    }
+
+    span.round-tab {
+        font-size: 16px;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .wizard .nav-tabs > li a {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .wizard li.active:after {
+        content: " ";
+        position: absolute;
+        left: 40%;
+    }
+}
+</style>
+<div class="container">
+	<div class="tab-pane" role="tabpanel" id="step2">
+                        <h1 style="font-size:1.2rem; vertical-align:top;"><img src="../../img/mark.jpg"> 회원탈퇴</h1>
+                        <form *ngIf="active" (ngSubmit)="onSubmit()" #signupForm="ngForm">
+
+							<div class="form-group">
+					        	<label for="passwrod">암호</label>
+					      		<input type="password" class="form-control frm_input required" id="password"
+					               		required  minlength="6" [(ngModel)]="password1"
+					               		name="password">
+					        </div>
+					        
+					        <div class="form-group">
+					        	<label for="passwrod">암호 재확인</label>
+					      		<input type="password" class="form-control frm_input required" id="password2"
+					               		required  minlength="6" [(ngModel)]="password2"
+					               		name="password2">
+					        </div>
+					        
+					        <div id="wrestErrorField"></div>
+					        <br>
+					    
+	                        <ul class="list-inline pull-right">
+	                            <!--  li><button type="button" class="btn btn-default prev-step">Previous</button></li-->
+	                            <li><button type="submit" class="btn btn-primary next-step" id="signupBtn">회원 탈퇴</button></li>
+	                        </ul>
+                        </form>
+                    </div>
+</div>

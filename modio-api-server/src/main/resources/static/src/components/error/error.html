@@ -1,0 +1,65 @@
+<style>
+.error01 {
+	width:600px;
+	margin:60px auto 0;
+	background:url('/img/error/error_bg01.gif') no-repeat;
+	background-color:#fff;
+	border-bottom:solid 4px #bfbfbf;
+	padding:60px 0;
+	}
+	.error01 div.img01 {
+		background:url('/img/error/error_img01.gif') no-repeat;
+		padding:0 0 0 214px;
+		height:130px;
+		}
+	.error01 div.img02 {
+		background:url('/img/error/error_img02.gif') no-repeat;
+		padding:0 0 0 214px;
+		height:130px;
+		}
+	.error01 p.tl01 {
+		font-size:14px;
+		font-weight:bold;
+		margin:0;
+		padding:0 0 8px 5px;
+		}
+	.error01 p.txt01 {
+		margin:0;
+		padding:15px;
+		background-color:#efefef;
+		width:300px;
+		}
+		
+	.error01 .home {
+		width:100%;
+		text-align:center;
+	}
+	.error01 a {
+		order-radius: 5px!important;
+		color: #fff;
+		background-color: #025aa5;
+		border-color: #01549b;
+		padding:10px;
+		text-align: center;
+	}
+
+</style>
+
+<!-- content 영역 -->
+<div class="area01">		
+	<!-- 시스템 오류 메시지 -->
+	<div class="error01">
+		<div class="img01">
+			<p class="tl01">시스템  메시지 : {{errcode}}</p>
+			<p class="txt01">
+				{{message}}.<br/><br/>
+				<!--  {{rawMessage}}-->
+				잠시 후에 재접속하시거나 시스템 담당자에게 문의해 주시기 바랍니다.<br/>
+			</p>
+		</div>
+		<br><br><br>
+		<div class="home">
+		<a href="{{setting.hostUrl}" >홈으로 이동</a>
+		</div>
+	</div>		
+</div>

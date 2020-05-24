@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ContentShare">
+
+	<resultMap id="result" type="content">
+		<result property="mbId" 		column="mb_id" />
+		<result property="caId" 		column="ca_id" />
+		<result property="type" 		column="type" />
+		<result property="url" 			column="url" />
+		<result property="regtime" 		column="regtime" />
+	</resultMap>
+
+	<!-- 컨텐츠 공유 관련 쿼리 START -->
+		
+	<insert id="insert" parameterType="contentShareVO" useGeneratedKeys="true" keyProperty="id">
+	INSERT INTO TB_CONTENT_SHARE ( 
+					mb_id   ,
+					ca_id   ,
+					type	,		
+					url		,	
+					regtime )
+	VALUES (
+					#{mb_id}    ,
+					#{ca_id}    ,
+					#{type}     ,
+					#{url}		,
+					#{regtime}	
+	)
+	</insert>
+	
+	<update id="update" parameterType="contentShareVO" useGeneratedKeys="true" keyProperty="id">
+	UPDATE TB_CONTENT_SHARE
+	SET regtime = #{regtime}
+	WHERE mb_id = #{mb_id} AND
+		ca_id = #{ca_id} AND
+		type = #{type} AND
+		url = #{url}
+	</update>
+	
+	<delete id="delete" parameterType="contentShareVO">
+	    DELETE 	FROM TB_CONTENT_SHARE
+	    WHERE	mb_id = #{mb_id} AND
+	 		 	ca_id = #{ca_id} AND
+	 		 	url   = #{url}
+	</delete>
+	
+	<select id="select" parameterType="contentShareVO" resultType="contentShareVO">
+		SELECT *
+		FROM TB_CONTENT_SHARE
+		WHERE mb_id = #{mb_id}
+	</select>
+	
+	<!-- 컨텐츠 공유 관련 쿼리 END -->
+	
+</mapper>

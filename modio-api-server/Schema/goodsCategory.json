@@ -1,0 +1,20 @@
+{"_id":{"$oid":"599a980038f55f031c8b1607"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"쥬스","en":"Juice"},"imageId":"5ae33e7706374b169ae37cda"}
+{"_id":{"$oid":"599a998a38f55f031c8b1609"},"name":{"kr":"음식","en":"Food"},"subName":{"kr":"샌드위치","en":"Sandwich"},"imageId":"5ae33e7706374b169ae37cd9"}
+{"_id":{"$oid":"599a980038f55f031c8b1603"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"커피","en":"Coffee"},"imageId":"5ae33e7606374b169ae37cd8"}
+{"_id":{"$oid":"599a998a38f55f031c8b1608"},"name":{"kr":"음식","en":"Food"},"subName":{"kr":"케이크","en":"Cake"},"imageId":"5ae33e7606374b169ae37cd7"}
+{"_id":{"$oid":"599a980038f55f031c8b1605"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"차","en":"Tea"},"imageId":"5ae33e7606374b169ae37cd6"}
+{"_id":{"$oid":"599a9a6638f55f031c8b1612"},"name":{"kr":"기타메뉴","en":"Etc"},"subName":{"kr":"머그컵","en":"Mug cup"},"imageId":"5ae33e7606374b169ae37cd5"}
+{"_id":{"$oid":"599a9a6638f55f031c8b1613"},"name":{"kr":"기타메뉴","en":"Etc"},"subName":{"kr":"텀블러","en":"Tumbler"},"imageId":"5ae33e7606374b169ae37cd3"}
+{"_id":{"$oid":"599a9a6638f55f031c8b1611"},"name":{"kr":"기타메뉴","en":"Etc"},"subName":{"kr":"원두","en":"Beans"},"imageId":"5ae33e7606374b169ae37cd4"}
+{"_id":{"$oid":"599a998a38f55f031c8b1610"},"name":{"kr":"음식","en":"Food"},"subName":{"kr":"빵","en":"Bakery"},"imageId":"5ae33e7606374b169ae37cd2"}
+{"_id":{"$oid":"599a998a38f55f031c8b1614"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"발효음료","en":"Fermented-drink"},"imageId":"5ae33e7606374b169ae37cd0"}
+{"_id":{"$oid":"599a998a38f55f031c8b1615"},"name":{"kr":"음식","en":"Food"},"subName":{"kr":"요리","en":"Dish"},"imageId":"5ae33e7606374b169ae37cd1"}
+{"_id":{"$oid":"599a998a38f55f031c8b1616"},"name":{"kr":"음식","en":"Food"},"subName":{"kr":"에피타이저","en":"Appetizer"},"imageId":"5ae33e7606374b169ae37ccf"}
+{"_id":{"$oid":"599a998a38f55f031c8b1617"},"name":{"kr":"음식","en":"Food"},"subName":{"kr":"스프","en":"Soup"},"imageId":"5ae33e7606374b169ae37cce"}
+{"_id":{"$oid":"599a980038f55f031c8b1619"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"기타음료","en":"Beverage"},"imageId":"5ae33e7606374b169ae37ccc"}
+{"_id":{"$oid":"599a980038f55f031c8b1620"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"커피\u0026티","en":"Coffee \u0026 Tea"},"imageId":"5ae33e7606374b169ae37ccb"}
+{"_id":{"$oid":"599a980038f55f031c8b1621"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"프라프치노","en":"Frappuccino"},"imageId":"5ae33e7606374b169ae37cca"}
+{"_id":{"$oid":"599a980038f55f031c8b1623"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"요거트","en":"Yogurt"},"imageId":"5ae33e7506374b169ae37cc9"}
+{"_id":{"$oid":"599a980038f55f031c8b1624"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"아이스크림","en":"Ice Cream"},"imageId":"5ae33e7506374b169ae37cc7"}
+{"_id":{"$oid":"599a980038f55f031c8b1625"},"name":{"kr":"음료","en":"Beverage"},"subName":{"kr":"빙수","en":"Bingsoo"},"imageId":"5ae33e7506374b169ae37cc8"}
+{"_id":{"$oid":"599a998a38f55f031c8b1618"},"name":{"kr":"음식","en":"Food"},"subName":{"kr":"디저트","en":"Dessert"},"imageId":"5ae6aff106374b66b3a96f00"}

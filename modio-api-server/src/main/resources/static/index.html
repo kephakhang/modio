@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    	<!--네이버 소유확인메타테그 -->
+	<!--  meta name="naver-site-verification" content="631b1222075dc29a05153e0412afec4b"/-->
+	
+	<meta name="fragment" content="!">
+	
+	<!-- 소셜미디어 ============================ -->
+	<meta property="og:title" content="Modio" />
+	<meta property="og:type" content="website" />
+	<meta property="og:description" content="Mobile Direct Order Service Portal" />
+	
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    
+    <title>Modio</title>
+    <link rel="stylesheet" href="/css/bootstrap-4.0.0-alpha.5-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css">
+    
+    <!-- link rel="stylesheet" href="/styles/animate.css"  /-->
+    <!--[if gte IE 7]><!-->
+	  <link rel="stylesheet" media="screen, projection" href="/styles/master.css">
+	  <link rel="stylesheet" media="screen, projection" href="/styles/infinite.css">
+	  <link rel="stylesheet" media="screen, projection" href="/styles/adapt.css">
+	  <link rel="stylesheet" media="screen, projection" href="/styles/attachment-overlay.css">
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="/styles/app.css">
+</head>
+
+<body>
+    <app></app>
+</body>
+
+
+
+<!-- ES6-related imports -->
+<script src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
+<script src="/node_modules/es6-shim/es6-shim.min.js"></script>
+<script src="/node_modules/systemjs/dist/system.js"></script>
+<script>
+    //configure system loader
+    System.config({defaultJSExtensions: true, format: 'register'});
+</script>
+<script src="/node_modules/rxjs/bundles/Rx.js"></script>
+<script src="/node_modules/angular2/bundles/angular2.min.js"></script>
+<script src="/node_modules/angular2/bundles/http.min.js"></script>
+<script src="/node_modules/angular2/bundles/router.min.js"></script>
+<script src="/js/jquery-1.8.3.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/wrest.js"></script>
+<script src="/js/sha256.js"></script>
+
+<script>
+	
+    //bootstrap the Angular2 application
+    //System.config({defaultJSExtensions: true, format: 'register'});
+    System.import('dist/main').catch(console.log.bind(console));
+    
+	 
+</script>
+
+</html>

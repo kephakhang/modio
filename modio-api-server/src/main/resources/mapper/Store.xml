@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Store">
+
+	<!-- 사용자 관리 관련 쿼리 START -->
+	
+	<select id="selectOne" parameterType="Long" resultType="store">
+		SELECT id, img_id1 as image1, img_id2 as image2, img_id3 as image3
+				name, address, phone, description, open_time as openTime
+				closed_day as closedDay, regtime, updtime
+		 FROM TB_STORE 
+		 WHERE id = #{id}
+	</select>
+	
+	
+	<insert id="insert" parameterType="storeVO" useGeneratedKeys="true" keyProperty="storeVO.id" keyColumn="id">
+	INSERT INTO TB_STORE ( 
+					name      	,
+					address		,
+					lat         ,
+					lon		,
+					user_id		,
+					ca_id         ,
+					phone		,
+					description	,
+					open_time		,
+					closed_day	
+		   )
+	VALUES (
+					#{name},
+					#{address},
+					#{lat},
+					#{lon},
+					#{ca_id},
+					#{phone},
+					#{description},
+					#{open_time},
+					#{closed_day}
+	)
+	</insert>
+	
+	<update id="update" parameterType="storeVO">
+	UPDATE TB_STORE
+		<set>
+			<if test="name != null">
+			name = #{name}     ,
+			</if>
+			<if test="address != null">
+			address = #{address}		 ,	
+			</if>	
+			<if test="lat > 0.0">
+			lat   = #{lat}      ,
+			</if>
+			<if test="lon > 0.0">
+			lon   = #{lon}      ,
+			</if>			
+			<if test="ca_id > 0">
+			ca_id   = #{ca_id}      ,
+			</if>	
+			<if test="phone != null">      
+			phone = #{phone}			
+			</if>
+			<if test="description != null">      
+			description = #{description}			
+			</if>
+			<if test="open_time != null">      
+			open_time = #{open_time}			
+			</if>
+			<if test="closed_day != null">      
+			closed_day = #{closed_day}			
+			</if>
+		</set>
+	WHERE id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="Long">
+	DELETE 
+	FROM TB_STORE 
+	WHERE id = #{id}
+	</delete>
+	
+	
+	<!-- 사용자관리 관련 쿼리 END -->
+	
+</mapper>

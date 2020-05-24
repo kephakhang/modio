@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="PID">????</Property>
+        <Property name="LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%wEx</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="RollingFile" fileName="logs/RUN.log" filePattern="./logs/RUN-%d{yyyyMMdd}.log"
+                 ignoreExceptions="false">
+	      <PatternLayout>
+	        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+	      </PatternLayout>
+	      <TimeBasedTriggeringPolicy />
+	    </RollingFile>
+    </Appenders>
+    <Loggers>
+    	<Logger name="org.springframework.core" level="info" />
+        <Logger name="org.springframework.beans" level="info" />
+        <Logger name="org.springframework.context" level="info" />
+        <Logger name="org.springframework.web" level="info" />
+        <Logger name="java.sql" level="debug" />
+        <Logger name="io.swagger" level="debug" />
+
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

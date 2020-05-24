@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Menu">
+
+	<!-- 사용자 관리 관련 쿼리 START -->
+	
+	<select id="select" parameterType="Integer" resultType="menuVO">
+		select * from TB_MENU where sn = #{sn}
+	</select>
+	
+	<select id="selectList" parameterType="menuVO" resultType="menuVO">
+		<![CDATA[
+		select *
+                from TB_MENU
+                order by code
+		]]>
+	</select>
+	
+	<select id="count" resultType="Integer">
+		select count(1) from TB_MENU
+	</select>
+	
+	<insert id="insert" parameterType="menuVO">
+	INSERT INTO TB_MENU ( code, name, link, target, order, use, mobile_use)
+	VALUES (#{code}, #{name}, #{link}, #{target}, #{order}, #{use}, #{mobile_use})
+	</insert>
+	
+	<update id="update" parameterType="menuVO">
+	UPDATE TB_MENU
+	SET code = #{code}, name = #{name}, link = #{link}, target = #{target}, order = #{order} , use = #{use} , mobile_use = #{mobile_use}
+	WHERE sn = #{sn}
+	</update>
+	
+	<delete id="delete" parameterType="menuVO">
+	DELETE FROM TB_MENU WHERE sn = #{sn}
+	</delete>
+	
+	<!-- 메뉴관리 관련 쿼리 END -->
+	
+</mapper>

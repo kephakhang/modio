@@ -1,0 +1,10 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Tue Mar 27 17:47:23 KST 2018
+@default-rabbit-milestone-https\://dl.bintray.com/rabbitmq/maven-milestones/.lastUpdated=1522140443283
+https\://repo.spring.io/snapshot/.error=
+https\://repo.spring.io/milestone/.error=
+https\://repo.maven.apache.org/maven2/.lastUpdated=1522140443948
+https\://repo.spring.io/milestone/.lastUpdated=1522140432315
+https\://repo.spring.io/snapshot/.lastUpdated=1522140432627
+https\://dl.bintray.com/rabbitmq/maven-milestones/.error=Could not transfer artifact com.youngplussoft\:error\:jar\:unknown from/to rabbit-milestone (https\://dl.bintray.com/rabbitmq/maven-milestones)\: Failed to transfer file\: https\://dl.bintray.com/rabbitmq/maven-milestones/com/youngplussoft/error/unknown/error-unknown.jar. Return code is\: 504 , ReasonPhrase\:Gateway Time-out.
+https\://repo.maven.apache.org/maven2/.error=

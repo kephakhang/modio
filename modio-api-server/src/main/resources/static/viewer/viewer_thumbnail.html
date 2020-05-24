@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Yally fbx_animation_json demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #111;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			.test {
+				position: fixed;
+				
+				z-index:4;
+				width: 500px;
+			}
+			
+			#myProgress {
+			  z-index:4;
+			  position: absolute; 
+			  left: 50%; 
+			  transform: translateX(-50%);
+			  margin-top:23%;
+			  width: 30%;
+			  height: 2%;
+			  background-color: #fff;
+			  align = center;
+			}
+
+			#myBar {
+			  position: absolute;
+			  width: 10%;
+			  height: 100%;
+			  background-color: #4CAF50;
+			}
+
+			#label {
+			  text-align: center;
+			  line-height: 15px;
+			  color: black;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="lib/three.js"></script>
+		<script src="lib/Detector.js"></script>
+		<script src="lib/stats.min.js"></script>
+		<script src="lib/DDSLoader.js"></script>
+		<script src="lib/Projector.js"></script>
+		<script src="lib/Setting.js"></script>
+		
+		<!-- 움직임 라이브러리(회전 줌인 이동) -->
+		<script src="lib/OrbitControls.js"></script>
+
+		<div id="myProgress">
+		  <div id="myBar">
+			<div id="label">Loading</div>
+		  </div>
+		</div>
+		<button id = "capture" style = "position: fixed; left: 10px; top: 10px; z-index:999;" onclick="screen()">썸네일 캡쳐</button>
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var SCREEN_WIDTH = window.innerWidth;
+			var SCREEN_HEIGHT = window.innerHeight;
+
+			var container, stats;
+			var camera, scene, renderer;
+			var mixers = [];
+
+			var clock = new THREE.Clock();
+
+			var params = getUrlParams();
+			console.log("uuid : " + params.uu);
+			
+			init();
+			animate();
+
+			//캡쳐 버튼 클릭 시 실행되는 메소드.
+			function screen() {
+				//Restful 전송을 위한 XMLHttpRequest 객체 초기화
+				var xmlhttp = new XMLHttpRequest();
+
+				//전송 URL 및 파라미터 셋팅. render.domElement를 통해 랜더링 된 이미지 데이터를 얻어온다.
+//				var url = "http://localhost:8080/api/v2/users/content/thumnail?uuid=" + params.uu +
+//					"&thumnail=" + renderer.domElement.toDataURL("image/png");
+				var url = hostUrl +"/api/v2/users/content/thumbnail?uuid=" + params.uu +
+					"&thumnail=" + renderer.domElement.toDataURL("image/png");
+
+				//셋팅한 정보를 이용하여 open
+				xmlhttp.open("POST", url, true);
+
+				//헤더 값 셋팅
+				xmlhttp.setRequestHeader("Content-type", "text/plain");
+
+				//전송
+				xmlhttp.send(null);
+			}
+
+			function init() {
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+				camera = new THREE.PerspectiveCamera( 10, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
+				
+				camera.target = new THREE.Vector3( 0, 0, 0 );
+
+				scene = new THREE.Scene();
+
+				// 물체의 Lights
+				scene.add( new THREE.AmbientLight( 0xcccccc ) );
+
+				//
+				var percent;
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						percent = Math.round(percentComplete, 2);
+						if(percent == 100) {
+							move(99, false);
+							console.log(percent);
+						}
+						else {
+							move(percent, false);
+							console.log(percent);
+						}
+						
+					}
+				};
+
+				var onError = function ( xhr ) {
+					console.log('error : ' + xhr);
+				};
+				
+				THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+				var loader = new THREE.JSONLoader();
+				var callbackMale = function ( geometry, materials ) { 
+					createScene( geometry, materials, 1.0, 1.0, 1.0, 0 ); 
+					move(100, true);
+					
+					//자동 스크린샷
+					render();
+					screen();
+				};
+		
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+//						alert( Math.round(percentComplete, 2) + '% downloaded' );
+						move(Math.round(percentComplete, 2), false);
+					}
+				};
+
+				var onError = function ( xhr ) {
+					alert('error : ' + xhr);
+				};
+				
+				loader.load( hostUrl + "/api/v2/content/model/" + params.uu , callbackMale, onProgress, onError );
+				//s라짜 넣는 부분을 추가해야 함(년월201610 식으로()) 
+//				loader.load( hostUrl + "/obj/201610/" + params.uu + ".json" , callbackMale, onProgress, onError );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true,  preserveDrawingBuffer: true} );
+				renderer.setClearColor( "#ffffff" );		//배경 색
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+				renderer.domElement.style.position = "relative";
+
+				container.appendChild( renderer.domElement );
+				
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+
+				renderer.shadowMap.enabled = true;
+
+				//마우스를 통한 움직임 코드
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.target.set( 1, 1, 1 );
+				camera.position.set( 100, 100, 100 );
+				controls.update();
+				
+				window.addEventListener( 'resize', onWindowResize, false );
+			}
+			var elem = document.getElementById("myBar");
+			var myProg = document.getElementById("myProgress");
+			
+			function getUrlParams() {
+			    var params = {};
+			    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+			    return params;
+			} 
+			
+			function move(width, clean_val) {
+			  frame();
+			  //타이머 이벤트 등록
+//			  var id = setInterval(frame, 30);
+			  function frame() {
+				if (clean_val == true) {
+				  
+				  
+				  //로딩바 삭제.
+				  myProg.style.display = "none";
+				  
+				  //타이머 이벤트 해제
+//				  clearInterval(id);				  
+				} else {
+//				  clearInterval(id);
+				  elem.style.width = width + '%';
+				  document.getElementById("label").innerHTML = width * 1  + '%';
+				}
+			  }
+			}
+			
+			function createScene( geometry, materials, x, y, z, b ) {
+
+				zmesh = new THREE.Mesh( geometry, new THREE.MultiMaterial( materials ) );
+				zmesh.position.set( x, y, z );
+				zmesh.scale.set( 1, 1, 1 );
+				scene.add( zmesh );
+
+				//뒤 사진이미지들 보이는 것. 디버깅용으로 사용할 것.(첨부된 이미지 파일들 목록이 뒤에 나온다.)
+//				createMaterialsPalette( materials, 100, b );
+			}
+
+			function onWindowResize( event ) {
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				render();
+
+			}
+
+
+			function render() {
+
+
+				var delta = clock.getDelta();
+				
+				for ( var i = 0; i < mixers.length; i ++ ) {
+
+						mixers[ i ].update( delta );
+						move(100, true);
+				}
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>

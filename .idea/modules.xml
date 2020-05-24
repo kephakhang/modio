@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/modio.iml" filepath="$PROJECT_DIR$/modio.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modio-api-server/modio-api-server.iml" filepath="$PROJECT_DIR$/modio-api-server/modio-api-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modio-oauth2-server/modio-oauth2-server.iml" filepath="$PROJECT_DIR$/modio-oauth2-server/modio-oauth2-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modio-vertx-server/modio-vertx-server.iml" filepath="$PROJECT_DIR$/modio-vertx-server/modio-vertx-server.iml" />
+    </modules>
+  </component>
+</project>

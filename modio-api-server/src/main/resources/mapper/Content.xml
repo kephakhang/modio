@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Content">
+
+	<resultMap id="result" type="content">
+		<id property="sn" 			column="id" />
+		<result	property="id" 			column="uuid" />
+		<result property="mbId" 		column="mb_id" />
+		<result property="caId" 		column="ca_id" />
+		<result property="title" 		column="title" />
+		<result property="rmk" 			column="rmk" />
+		<result property="fname" 		column="fname" />
+		<result property="ftype" 		column="ftype" />
+		<result property="fsize" 		column="fsize" />
+		<result property="regtime" 		column="regtime" />
+		<result property="updtime" 		column="updtime" />
+		<result property="viewCount"       	column="view_count" />
+		<result property="buyCount"        	column="buy_count" />
+		<result property="shareCount"      	column="share_count" />
+		<result property="downCount"       	column="down_count" />
+		<result property="redirectCode"       	column="redirect_code" />
+		<result property="orig_status"       	column="orig_status" />
+		<result property="orig_key"       	column="orig_key" />
+		<result property="open"       	column="open" />
+	</resultMap>
+
+	<!-- 사용자 관리 관련 쿼리 START -->
+	
+	<select id="select_sn" resultType="String">
+		SELECT MAX(id)
+	    FROM TB_CONTENT
+	</select>
+	
+	<select id="select" parameterType="String" resultType="contentVO">
+		SELECT *
+	    FROM TB_CONTENT 
+	    WHERE uuid = #{id} 
+	</select>
+	
+	<select id="select_V" parameterType="String" resultMap="result">
+		SELECT co.uuid as id, mb.email as mb_id, co.ca_id, co.title, co.rmk, co.fname, co.ftype, co.fsize, co.regtime, co.updtime
+	    FROM TB_CONTENT co, tb_user mb
+	    WHERE     co.uuid = #{id} AND  mb.id = co.mb_id
+	</select>
+	
+	
+	<select id="selectUserContent" parameterType="content" resultType="contentVO">
+		SELECT co.*, ca.name as ca_name, json.json as json
+	    FROM TB_CONTENT co, TB_CATEGORY ca, TB_CONTENT_JSON json
+	    WHERE   co.uuid = #{id} AND ca.id = co.ca_id AND json.co_id = co.id
+	    	AND co.mb_id = (select id FROM tb_user where email = #{mb_id})
+	</select>
+	<!-- 
+	<select id="selectUserContent_V" parameterType="content" resultMap="result">
+		SELECT co.uuid as id, #{mb_id} as mb_id, co.ca_id, co.title, co.rmk, co.fname, co.ftype, co.fsize, co.regtime, co.updtime, ca.name as ca_name
+		FROM TB_CONTENT co, TB_CATEGORY ca
+		WHERE 	co.uuid = #{id} AND ca.id = co.ca_id
+			AND co.mb_id = (select id FROM tb_user where email = #{mb_id})
+	</select>
+	 -->
+	 
+	 <select id="selectUserContent_V" parameterType="String" resultMap="result">
+		SELECT *
+		FROM TB_CONTENT
+		WHERE 	uuid = #{uuid}
+	</select>
+	
+	<select id="selectList" parameterType="content" resultType="contentVO">
+		<![CDATA[
+		SELECT  * 
+			FROM  (
+			SELECT @rownum:=@rownum+1 AS RN, ALL_LIST.* 
+			  FROM  (
+			  	SELECT co.*, ca.name as ca_name, json.json as json
+			  	FROM   TB_CONTENT co, TB_CATEGORY ca, TB_CONTENT_JSON json
+		]]>
+			<if test="mb_id != null">
+	    				, tb_user mb
+	    	</if>
+			  	WHERE  1 = 1 
+			<if test="mb_id != null">
+					AND mb.email = #{mb_id} AND co.mb_id = mb_id
+			</if>
+			  		AND ca.id = co.ca_id AND json.co_id = co.id ;
+			<if test="searchKeyword != ''">
+				<if test="searchCondition == 'title'">
+					<![CDATA[ AND co.title  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>		
+				<if test="searchCondition == 'rmk'">
+					<![CDATA[ AND co.rmk is not NULL AND co.rmk  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>				
+			</if>			
+				ORDER BY co.id
+		<![CDATA[
+				) ALL_LIST,
+				( SELECT @rownum:=0 ) TMP
+			) aaa
+			WHERE RN BETWEEN #{firstIndex} AND #{lastIndex}
+		]]>
+	</select>
+
+	<select id="selectList_V" parameterType="content" resultMap="result">
+		<![CDATA[
+		SELECT  * 
+			FROM  (
+			SELECT @rownum:=@rownum+1 AS RN, ALL_LIST.* 
+			  FROM  (
+			  	SELECT co.*, ca.name as ca_name 
+			  	FROM   TB_CONTENT co, TB_CATEGORY ca
+	    ]]>
+	    	<if test="mb_id != null">
+	    				, tb_user mb
+	    	</if>
+			  	WHERE  1 = 1 
+			<if test="mb_id != null">
+					AND mb.email = #{mb_id} AND co.mb_id = mb_id
+			</if>
+			  		AND ca.id = co.ca_id		
+			<if test="searchKeyword != ''">
+				<if test="searchCondition == 'title'">
+					<![CDATA[ AND co.title  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>		
+				<if test="searchCondition == 'rmk'">
+					<![CDATA[ AND co.rmk is not NULL AND co.rmk  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>				
+			</if>			
+				ORDER BY co.id
+		<![CDATA[
+				) ALL_LIST,
+				( SELECT @rownum:=0 ) TMP
+			) aaa
+			WHERE RN BETWEEN #{firstIndex} AND #{lastIndex}
+		]]>
+	</select>
+	
+	
+	<select id="count" parameterType="content" resultType="Long">
+		<![CDATA[
+			  select count(*) as cnt 
+			  from TB_CONTENT co
+		]]>
+			<if test="mb_id != null">
+	    			, tb_user mb
+	    	</if>
+			  WHERE  1 = 1 		
+			<if test="mb_id != null">
+					AND mb.email = #{mb_id} AND co.mb_id = mb.id
+			</if>
+			<if test="searchKeyword != ''">
+				<if test="searchCondition == 'title'">
+					<![CDATA[ AND co.title  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>		
+				<if test="searchCondition == 'rmk'">
+					<![CDATA[ AND co.rmk is not null AND co.rmk  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>				
+			</if>	
+	</select>
+	
+	<!-- 20161120 이중길 추가. 공유 트래킹 추가를 위한 공유 시퀸스아이디 조회 쿼리문 -->
+	<select id="select_share" parameterType="selectshareVO" resultType="String">
+		SELECT id
+		FROM TB_CONTENT_SHARE
+		WHERE 	mb_id = #{mb_id} AND
+		url = 	#{url} AND
+		ca_id = (SELECT id
+				FROM TB_CONTENT
+				WHERE uuid = #{uuid})
+	</select>
+	
+	<!-- 20161120 이중길 추가. 공유 트래킹 추가 쿼리문 -->
+	<insert id="insert_share" parameterType="insertshareVO">
+		INSERT INTO TB_CONTENT_SHARE_TRACKING (share_id, ip, port)
+		VALUES(#{share_id}, #{ip}, #{port})
+	</insert>
+	
+	<insert id="insert" parameterType="contentVO" useGeneratedKeys="true" keyProperty="id">
+	INSERT INTO TB_CONTENT ( 
+					mb_id      	,
+					ca_id      	,
+					title		,					
+					<if test="rmk != null">
+					rmk         ,
+					</if>		
+					fname		,
+					ftype		,
+					fsize		,
+					uuid		,
+					regtime     ,
+					updtime     ,
+					open )
+	VALUES (
+					#{mb_id}	,
+					#{ca_id}	,
+					#{title}	,
+					<if test="rmk != null">
+					#{rmk}		,
+					</if>
+					#{fname}	,
+					#{ftype}	,
+					#{fsize}	,	
+					#{uuid}		,	
+					<if test="regtime == null">      
+					NOW()		,
+					</if>
+					<if test="regtime != null">      
+					#{regtime}	,
+					</if>
+					<if test="updtime == null">      
+					NOW()		,
+					</if>
+					<if test="updtime != null">      
+					#{updtime}	,
+					</if>
+					#{open}
+	)
+	</insert>
+	
+	<update id="update" parameterType="contentVO">
+	UPDATE TB_CONTENT
+		<set>
+			<if test="mb_id != null">
+			mb_id = #{mb_id}      ,
+			</if>
+			<if test="ca_id != null">
+			ca_id = #{ca_id}     ,
+			</if>
+			<if test="title != null">
+			title = #{title}		 ,	
+			</if>				
+			<if test="rmk != null">
+			rmk   = #{rmk}      ,
+			</if>	
+			<if test="updtime == null">      
+			updtime = NOW()			
+			</if>
+			<if test="updtime != null">      
+			updtime = #{updtime}
+			</if>
+		</set>
+	WHERE uuid = #{uuid}
+	</update>
+	
+	<delete id="delete" parameterType="content">
+	DELETE 
+	FROM TB_CONTENT 
+	WHERE mb_id = (select id from tb_user where email = #{mbId}) And uuid = #{id}
+	</delete>
+	
+	<delete id="deleteMultiple" parameterType="java.lang.String">
+		delete from TB_CONTENT
+		where	
+	    		uuid in ${value}
+	</delete>
+	
+	<!-- 사용자관리 관련 쿼리 END -->
+	
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="LastEmail">
+
+	<resultMap id="result" type="lastEmailVO">
+		<result property="lastTime" 		column="last_time" />
+		<result property="lastHash" 		column="last_hash" />
+	</resultMap>
+
+	<!-- 사용자 관리 관련 쿼리 START -->
+	
+	<select id="select" resultMap="result">
+		select * from TB_LAST_EMAIL
+	</select>
+	
+	
+	<insert id="insert" parameterType="lastEmailVO">
+	INSERT INTO TB_LAST_EMAIL ( last_time, last_hash )
+	VALUES (#{lastTime}, #{lastHash})
+	</insert>
+	
+	<update id="update" parameterType="lastEmailVO">
+	UPDATE TB_LAST_EMAIL
+		SET last_time = #{lastTime},last_hash = #{lastHash}
+	</update>
+	
+	<!-- 메뉴관리 관련 쿼리 END -->
+	
+</mapper>

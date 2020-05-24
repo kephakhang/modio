@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ContentJson">
+
+	<!-- 사용자 관리 관련 쿼리 START -->
+	
+	<select id="select" parameterType="Long" resultType="contentJsonVO">
+		SELECT * from TB_CONTENT_JSON where co_id = #{co_id}
+	</select>
+	
+	
+
+	
+
+	
+	
+	<insert id="insert" parameterType="contentJsonVO">
+	INSERT INTO TB_CONTENT_JSON ( 
+					co_id      ,
+					json		 )
+	VALUES (
+					#{co_id}      ,
+					#{json}      
+	)
+	</insert>
+	
+	<update id="update" parameterType="contentJsonVO">
+	UPDATE TB_CONTENT_JSON
+		<set> 
+			json = #{json}			
+		</set>
+	WHERE co_id = #{co_id}
+	</update>
+	
+	<update id="updateConcat" parameterType="contentJsonVO">
+	UPDATE TB_CONTENT_JSON
+		<set>
+			json = json + #{json})			
+		</set>
+	WHERE co_id = #{co_id}
+	</update>
+	
+	<delete id="delete" parameterType="Long">
+	DELETE FROM TB_CONTENT_JSON WHERE co_id = #{co_id}
+	</delete>
+	
+	<delete id="deleteMultiple" parameterType="java.lang.String">
+		delete from TB_CONTENT_JSON
+		where	
+	    		co_id in ${value}
+	</delete>
+	
+	<!-- 사용자관리 관련 쿼리 END -->
+	
+</mapper>

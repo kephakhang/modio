@@ -1,0 +1,9 @@
+*.zip
+*.gz
+*.zip
+*.tar
+target/
+logs/
+test/
+.svn/
+node_modules/

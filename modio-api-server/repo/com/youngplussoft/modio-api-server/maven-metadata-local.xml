@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.youngplussoft</groupId>
+  <artifactId>modio-api-server</artifactId>
+  <versioning>
+    <versions>
+      <version>0.0.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20180126133948</lastUpdated>
+  </versioning>
+</metadata>

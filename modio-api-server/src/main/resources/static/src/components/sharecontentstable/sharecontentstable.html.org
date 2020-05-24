@@ -1,0 +1,51 @@
+<div class="container">
+	<div class="text-xs-center">
+	<!-- 2016.10.11 이중길 추가.  -->
+	<iframe width="60%" height="500px"  src="{{setting.hostUrl}}/viewer/viewer_main_stream.html?uu={{return_uuid()}}||{{return_orig_status()}}" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel="" allowtransparency="true"></iframe>
+	</div>
+
+	<h2 style="font-size:1.0rem; vertical-align:bottom;"><img src="../../img/mark.jpg"> 컨텐츠 명 공유 목록</h2>  
+	<div class="table-responsive">
+	  <table class="table">
+	    <thead>
+	      	<tr style="font-size:1.2rem;">
+				<th>#</th>
+				<th>공유한 사람</th>
+				<th>공유 방식</th>
+				<th>공유 SNS</th>
+				<th>공유 시간</th>
+	    	</tr>
+	    </thead>
+	    <tbody *ngFor="#post of posts">
+	      <tr [routerLink]="['/Sharecontentstracking', {id: post.id}]" style="font-size:1.0rem;">
+			<td>*</td>
+			<td>{{post.email}}</td>
+			<template [ngIf]="post.type == 1">
+				<td>URL</td>
+			</template>
+			<template [ngIf]="post.type == 2">
+				<td>태그</td>
+			</template>
+			<template [ngIf]="post.type == 3">
+				<td>다운로드</td>
+				<td>-</td>
+			</template>
+			<template [ngIf]="post.url == 'FaceBook'">
+				<td>페이스 북</td>
+			</template>
+			<template [ngIf]="post.url == 'Twitter'">
+				<td>트위터</td>
+			</template>
+			<template [ngIf]="post.url == 'Embedded_Tag'">
+				<td>임베디드 태그</td>
+			</template>
+			<td>{{post.regtime}}</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	
+	<div class="text-xs-center">
+		<button class="btn btn-primary" (click)="loadMore();">콘텐츠더보기</button>
+	</div>
+</div>

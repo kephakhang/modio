@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User">
+
+	<resultMap id="result" type="user">
+		<result property="id" 			column="email" />
+		<result property="level" 		column="level" />
+		<result property="name" 		column="name" />
+		<result property="password" 	column="password" />
+		<result property="tel" 			column="tel" />
+		<result property="birth" 		column="birth" />
+		<result property="regtime" 		column="regtime" />
+		<result property="updtime" 		column="updtime" />
+	</resultMap>
+	
+	
+
+	<!-- 사용자 관리 관련 쿼리 START -->
+	
+	<select id="select" parameterType="String" resultType="userVO">
+		select * from tb_user where email = #{email} AND is_avail = 1 
+	</select>
+	
+	<select id="select_V" parameterType="String" resultMap="result">
+		select * from tb_user where email = #{email} AND is_avail = 1 
+	</select>
+	
+	<select id="selectLogin" parameterType="login" resultType="userVO">
+		select * from tb_user WHERE email = #{id} AND password = #{password} AND is_avail = 1
+	</select>
+	
+	<select id="select_IdToEmail" parameterType="String" resultType="String">
+		select email from tb_user WHERE id = #{id}
+	</select>
+	
+	<select id="checkAccessToken" parameterType="user" resultType="userVO">
+		<![CDATA[
+		select * from tb_user
+		where
+		]]>
+		<if test="id != null">
+		<![CDATA[ email = #{id} and ]]>
+		</if>
+		<![CDATA[
+		access_token is not null and access_time is not null and
+		      access_token = #{accessToken} and TIMESTAMPDIFF(MINUTE, now(), access_time) < 60
+		]]>
+	</select>
+	
+	<select id="checkEmailKey" parameterType="user" resultType="userVO">
+		<![CDATA[
+		select * from tb_user
+		where email = #{id} and email_key is not null and is_email_auth = 0 and
+		      email_key = #{emailKey} and TIMESTAMPDIFF(HOUR, now(), regtime) < 240
+		]]>
+	</select>
+	
+	<select id="selectList" parameterType="user" resultType="userVO">
+		<![CDATA[
+		SELECT  * 
+			FROM  (
+			SELECT @rownum:=@rownum+1 AS RN, ALL_LIST.* 
+			  FROM  (
+			  	select id, email, password, name, level, tel, birth, regtime from tb_user
+			  	WHERE  1 = 1 
+			  	AND is_avail = 1 AND is_email_auth = 1
+		]]>
+			<if test="searchKeyword != ''">
+				<if test="searchCondition == 'id'">
+					<![CDATA[ AND id  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>		
+				<if test="searchCondition == 'name'">
+					<![CDATA[ AND name  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>				
+			</if>				
+				ORDER BY id
+		<![CDATA[
+				) ALL_LIST,
+				( SELECT @rownum:=0 ) TMP
+			) aaa
+			WHERE RN BETWEEN #{firstIndex} AND #{lastIndex}
+		]]>
+	</select>
+	
+	<select id="selectList_V" parameterType="user" resultMap="result">
+		<![CDATA[
+		SELECT  * 
+			FROM  (
+			SELECT @rownum:=@rownum+1 AS RN, ALL_LIST.* 
+			  FROM  (
+			  	select id, email, password, name, level, tel, birth, regtime from tb_user
+			  	WHERE  1 = 1 
+			  	AND is_avail = 1 AND is_email_auth = 1
+		]]>
+			<if test="searchKeyword != ''">
+				<if test="searchCondition == 'id'">
+					<![CDATA[ AND id  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>		
+				<if test="searchCondition == 'name'">
+					<![CDATA[ AND name  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>				
+			</if>				
+				ORDER BY id
+		<![CDATA[
+				) ALL_LIST,
+				( SELECT @rownum:=0 ) TMP
+			) aaa
+			WHERE RN BETWEEN #{firstIndex} AND #{lastIndex}
+		]]>
+	</select>
+	
+	<select id="count" parameterType="user" resultType="Integer">
+		<![CDATA[
+			  select count(*) as cnt from tb_user
+			  WHERE  1 = 1 
+			  AND is_avail = 1 AND is_email_auth = 1
+		]]>
+			<if test="searchKeyword != ''">
+				<if test="searchCondition == 'id'">
+					<![CDATA[ AND id  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>		
+				<if test="searchCondition == 'name'">
+					<![CDATA[ AND name  LIKE '%'||#{searchKeyword}||'%']]>
+				</if>				
+			</if>	
+	</select>
+	
+	<insert id="insert" parameterType="userVO" useGeneratedKeys="true" keyProperty="id">
+	INSERT INTO tb_user ( 
+					email			  ,
+					password     ,
+					name          ,
+					level		 ,					
+					<if test="tel != null">
+					tel           ,
+					</if>	
+					<if test="birth != null">
+					birth         ,
+					</if>
+					<if test="email_key != null">
+					email_key         ,
+					</if>	
+					<if test="is_email_auth != null">
+					is_email_auth         ,
+					</if>
+					<if test="is_avail != null">
+					is_avail         ,
+					</if>				
+					regtime  ,
+					updtime     )
+	VALUES (
+					#{email}            ,
+					#{password}      ,
+					#{name}          ,
+					#{level}		 ,
+					<if test="tel != null">
+					#{tel}           ,
+					</if>	
+					<if test="birth != null">
+					#{birth}         ,
+					</if>
+					<if test="email_key != null">
+					#{email_key}         ,
+					</if>	
+					<if test="is_email_auth != null">
+					#{is_email_auth}         ,
+					</if>
+					<if test="is_avail != null">
+					#{is_avail}         ,
+					</if>			        
+					NOW(),
+					NOW()
+	)
+	</insert>
+	
+	<update id="update" parameterType="userVO">
+	UPDATE tb_user
+		<set>
+			<if test="email != null">
+			email = email      ,
+			</if>
+			<if test="password != null">
+			password = #{password}      ,
+			</if>
+			<if test="name != null">
+			name = #{name}          ,
+			</if>
+			<if test="level != null">
+			level = #{level}	
+			</if>	 ,					
+			<if test="tel != null">
+			tel = #{tel}         ,
+			</if>	
+			<if test="birth != null">
+			birth = #{birth}       ,
+			</if>
+			<if test="is_email_auth != null">
+			is_email_auth = #{is_email_auth}     ,
+			</if>	
+			<if test="email_key != null">
+			email_key = #{email_key}     ,
+			</if>	
+			<if test="is_avail != null">
+			is_avail = #{is_avail}     ,
+			</if>		
+			<if test="regtime == null">      
+			regtime = NOW()			,
+			</if>
+			<if test="regtime != null">      
+			regtime = #{regtime}			,
+			</if>
+			<if test="updtime == null">      
+			updtime = NOW(),			
+			</if>
+			<if test="updtime != null">      
+			updtime = #{updtime},
+			</if>
+			<if test="access_token != null">      
+			access_token = #{access_token},
+			</if>
+			access_time = #{access_time}
+		</set>
+	WHERE id = #{id}
+	</update>
+	
+	<update id="update_V" parameterType="user">
+	UPDATE tb_user
+		<set>
+			<if test="password != null">
+			password = #{password}      ,
+			</if>
+			<if test="name != null">
+			name = #{name}          ,
+			</if>
+			<if test="level != null">
+			level = #{level}		,	
+			</if>	 				
+			<if test="tel != null">
+			tel = #{tel}         ,
+			</if>	
+			<if test="birth != null">
+			birth = #{birth}       ,
+			</if>
+			<if test="updtime == null">      
+			NOW()			
+			</if>
+			<if test="updtime != null">      
+			#{updtime}
+			</if>
+		</set>
+	WHERE email = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="Long">
+	DELETE FROM tb_user WHERE id = #{id}
+	</delete>
+	
+	<delete id="delete_V" parameterType="java.lang.String">
+	DELETE FROM tb_user  WHERE email = #{email}
+	</delete>
+	
+	<delete id="deleteMultiple" parameterType="Long">
+		delete from tb_user
+		where	
+	    		id in ${value}
+	</delete>
+	
+	<delete id="deleteMultiple_V" parameterType="java.lang.String">
+		delete from tb_user
+		where	
+	    		email in ${value}
+	</delete>
+	
+	<!-- 사용자관리 관련 쿼리 END -->
+	
+</mapper>

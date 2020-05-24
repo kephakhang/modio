@@ -1,0 +1,36 @@
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="pjax-timeout" content="1000">
+  <meta name="description" content="Daum 우편번호 서비스 안드로이드 샘플">
+</head>
+<body>
+
+<script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+<!--script charset="UTF-8" type="text/javascript" src="https://t1.daumcdn.net/cssjs/postcode/1506320738556/170925.js"></script-->
+
+<script>
+ //alert('aaa') ;
+
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
+            // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+            if( data.userSelectedType=="R"){
+                // userSelectedType : 검색 결과에서 사용자가 선택한 주소의 타입
+                // return type : R - roadAddress, J : jibunAddress
+                // TestApp 은 안드로이드에서 등록한 이름
+                window.Android.setAddress(data.zonecode, data.roadAddress, data.buildingName);
+            }
+            else{
+                window.Android.setAddress(data.zonecode, data.jibunAddress, data.buildingName);
+            }       
+        }
+    }).open() ;
+</script>
+
+<div id="address">
+</div>
+
+</body>
+</html>

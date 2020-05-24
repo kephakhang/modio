@@ -1,0 +1,97 @@
+<div id="header" role="banner">
+
+  <div id="preloader">
+    <div id="load"></div>
+  </div>
+  
+    <!-- div ng-show="AILoading" class="preloader">
+	    <div id="preloader">
+	    	<div id="load"></div>
+	  	</div>
+    </div-->
+  <div ng-hide="AILoading" ng-view></div>
+  
+  <div id="header-inner">
+
+    <div id="logo">
+      <a href="/" style="font-size:3em;"><!-- img alt="solidmodel" src="/img/logo.jpg"--><h1>Modio</h1></a>
+    </div>
+
+    <a href="#nav" id="toggle-nav" (click)="navOpen()" style="font-size:2em;"><i class="fa fa-bars fa-2x"></i></a> 
+
+    <ul id="nav" role="navigation">
+      <li id="t-search" role="search">
+          <input class="search-text placeholder" type="text" id="search_text" placeholder="&#xF002; Search " value="" 
+          			onkeypress="if(event.keyCode==13) {
+									window.location.href='/#/searchcontents?search_text=' + document.getElementById('search_text').value; 
+									
+									if( jQuery('#nav').hasClass('nav-open') )
+										jQuery('#nav').removeClass('nav-open') ;
+									else
+										jQuery('#nav').addClass('nav-open') ;
+									
+									return false;
+								}">
+      </li>  
+       
+      <template [ngIf]="accessToken == null">
+        <li id="t-signup">
+          <a [routerLink]="['/Signup']" (click)="navOpen()" style="text-align:right; padding-right:3%"><b>회원가입</b></a>
+        </li>
+        <li id="t-signin">
+          <a [routerLink]="['/Login']" (click)="navOpen()" style="text-align:right; padding-right:3%"><span><b>로그인</b></span></a>      
+        </li>
+      </template>
+      
+      <template [ngIf]="accessToken != null">
+      	<!--  li id="t-w3c">
+          <a href="https://validator.kldp.org/" target="_blank"><b>W3C 평가</b></a>
+        </li-->
+        <li id="t-content" style="text-align:right; padding-right:3%">
+      	  <b style="color:white;">&nbsp;[회원 메뉴]</b>
+        </li>  
+        <li id="t-exit">
+          <a [routerLink]="['/Deleteuser']" (click)="navOpen()" style="text-align:right; padding-right:3%"><b>회원정보 탈퇴</b></a>
+        </li>
+        <li id="t-signupdate">
+          <a [routerLink]="['/Modifieduser']" (click)="navOpen()" style="text-align:right; padding-right:3%"><b>회원정보 변경</b></a>
+        </li>
+        <li id="t-logout">
+          <a href="#" (click)="logout()" (click)="navOpen()" style="text-align:right; padding-right:3%"><span><b>로그아웃</b></span></a>      
+        </li>
+      </template>
+
+	 <template [ngIf]="accessToken != null">
+      <li id="t-upload">
+        <a [routerLink]="['/Upload']" (click)="navOpen()" style="text-align:right; padding-right:3%"><span><b>업로드</b></span></a>      
+      </li>
+      </template>
+     
+
+      <li id="t-main">
+        <a class="" [routerLink]="['/Main']"> <b style="font-size:1.3em; height:100px;">메인 콘텐츠</b><!--b class="caret"></b--></a>
+      </li>
+      
+      <template [ngIf]="accessToken != null">
+      <li id="t-content-info" style="text-align:right; padding-right:3%">
+       <b style="color:white;">&nbsp;[콘텐츠 메뉴]</b>
+      </li>
+      <li id="t-content">
+        <a class="" [routerLink]="['/Mycontents']" (click)="navOpen()" style="text-align:right; padding-right:3%"><b>나의 콘텐츠</b><!--b class="caret"></b--></a>
+      </li>
+      <li id="t-share">
+        <a class="" [routerLink]="['/Sharecontents']" (click)="navOpen()" style="text-align:right; padding-right:3%"><b>공유이력</b><!--b class="caret"></b--></a>
+      </li>
+      <li id="t-community">
+      	<a class="" [routerLink]="['/Community']" (click)="navOpen()" style="text-align:right; padding-right:3%"><b>자유게시판</b></a>
+      </li>
+      <li id="t-etc">
+        <!-- <a class="" [routerLink]="['/Home']"><b>...</b>--><!--b class="caret"></b--><!-- </a>  -->
+        <a class="" href="https://validator.kldp.org/" target="_blank" (click)="navOpen()" style="text-align:right; padding-right:3%"><b>W3C 테스트</b></a>
+      </li>
+      </template>
+    </ul>
+  </div>
+  </div> <!-- /header -->
+  <router-outlet></router-outlet>
+

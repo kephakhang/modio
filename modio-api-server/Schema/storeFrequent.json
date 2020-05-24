@@ -1,0 +1,1 @@
+{"_id":{"$oid":"5a76c10f42c033688cdc0676"},"userId":"599b717238f55f031c8b1609","store":{"$ref":"store","$id":{"$oid":"5ae333d406374b169ae37cc6"}},"buyCount":{"$numberLong":"0"},"clickCount":{"$numberLong":"0"}}

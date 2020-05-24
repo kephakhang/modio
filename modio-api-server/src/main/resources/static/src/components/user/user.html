@@ -1,0 +1,77 @@
+<div class="container">
+  <div  [hidden]="submitted">
+    <h1>회원정보 변경</h1>
+    <form *ngIf="active" (ngSubmit)="onSubmit()" #userForm="ngForm">
+
+		<div class="form-group">
+        	<label for="name">이름</label>
+      		<input type="text" class="form-control frm_input required" id="name"
+               		required  minlength="7" [value]="model.name"  [(ngModel)]="model.name"
+               		name="name"/>
+        </div>
+        
+		<div class="form-group">
+        	<label for="id">아이디</label>
+      		<input type="text" class="form-control frm_input email required" id="id"
+               		required  minlength="7" [value]="model.id" [(ngModel)]="model.id"
+               		name="id"/>
+        </div>
+               
+		<div class="form-group">
+        	<label for="passwrod">암호</label>
+      		<input type="password" class="form-control frm_input required" id="password1"
+               		required  minlength="6" [value]="password1" [(ngModel)]="password1"
+               		name="password1"/>
+        </div>
+        
+        <div class="form-group">
+        	<label for="passwrod2">암호</label>
+      		<input type="password" class="form-control frm_input required" id="password2"
+               		required  minlength="6" [value]="password2" [(ngModel)]="password2"
+               		name="password2"/>
+            
+        </div>
+        
+        <div class="form-group">
+        	<label for="level">회원 타입</label>
+      		<!--  input type="radiobox" class="form-control frm_input required" id="level"
+               		required  minlength="6" [(ngModel)]="password2"
+               		name="password2"-->	
+            <!--  md-radio-group ng-model="model.level">
+
+		      <md-radio-button value="1" class="md-primary">일반회원</md-radio-button>
+		      <md-radio-button value="2">기업회원</md-radio-button>
+		
+		    </md-radio-group-->	
+            <div class="radio-group">
+				<span><input type="radio" name="level" class="form-control radio frm_input required" value="1" [value]="model.level"  [(ngModel)]="model.level"><label>일반회원</label></span>
+				<span><input type="radio" name="level" class="form-control radio frm_input required" value="2" [value]="model.level"  [(ngModel)]="model.level"><label>기업회원</label></span>		
+			</div>	            
+        </div>
+        
+        
+        <div class="form-group">
+        <label for="title">썸네일 이미지</label>
+        <input type="file" class="form-control frm_input required" id="file"
+               required  (change)="selectFile($event)"
+               name="file">
+        <div style="display:none;"
+             class="alert alert-danger">
+          이미지 파일을 선택해 주세요.(1Mega이하)
+        </div>
+      </div>
+      
+      <div>
+      	<img src="/img/none.png" id="userThumb" width="128" height="128"/>
+      </div>
+        
+        <div id="wrestErrorField"></div><br>
+					        
+        <div class="text-xs-center">
+	        <button id="signupBtn" type="submit" class="btn btn-primary" >회원정보 변경</button>
+	    </div>
+	    
+
+    </form>
+  </div>
+</div>

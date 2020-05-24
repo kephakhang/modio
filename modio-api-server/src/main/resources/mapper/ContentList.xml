@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ContentList">
+
+    <resultMap id="result" type="content">
+		<id	    property="id" 			column="uuid" />
+		<result	    property="sn" 		column="id" />
+		<result property="mbId" 		column="mb_id" />
+		<result property="title" 		column="title" />
+		<result property="rmk" 			column="rmk" />
+		<result property="viewCount"    column="view_count" />
+		<result property="buyCount"     column="buy_count" />
+		<result property="shareCount"   column="share_count" />
+		<result property="downCount"    column="down_count" />
+		<result property="orig_status"  column="orig_status" />
+		<result property="open"  		column="open" />
+	</resultMap>
+	
+	<resultMap id="result_share_user" type="contentshareuserVO">
+		<result property="email" 		column="email" />
+		<result property="name" 		column="name" />
+	</resultMap>
+	
+	<resultMap id="result_table" type="contentsharetableVO">
+		<id	    property="id" 			column="id" />
+		<result property="mb_id" 		column="mb_id" />
+		<result property="type" 		column="type" />
+		<result property="url" 			column="url" />
+		<result property="regtime"     	column="regtime" />
+		<result property="email"        column="email" />
+	</resultMap>
+	
+	<resultMap id="result_Usertable" type="contentshareusertableVO">
+		<result property="uuid" 		column="uuid" />
+		<result property="title" 		column="title" />
+		<result property="email" 		column="email" />
+		<result property="id" 			column="id" />
+		<result property="mb_id"     	column="mb_id" />
+		<result property="type"        	column="type" />
+		<result property="url"        	column="url" />
+		<result property="regtime"      column="regtime" />
+	</resultMap>
+	
+	<resultMap id="result_tracking" type="contentsharetrackingtableVO">
+		<result property="ip" 			column="ip" />
+		<result property="port" 		column="port" />
+		<result property="regtime" 		column="regtime" />
+	</resultMap>
+    
+	<!-- 사용자 관리 관련 쿼리 START -->
+	<!-- 사람인지 사물인지와 조회수 공유수 등 아무것도 선택 안했을 때 -->
+	<select id="select" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT
+		WHERE open = 'true'
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_search" parameterType="contentListVO" resultMap="result">
+		SELECT TC.id, TC.uuid, TC.title, TC.rmk, TC.mb_id, TC.view_count, TC.share_count, TC.buy_count, TC.down_count, TC.orig_status, TC.open
+		FROM TB_CONTENT AS TC, tb_user AS TM
+		WHERE TC.mb_id = TM.id AND
+				TM.email LIKE '%${optionParam}%' AND 
+				TC.open = 'true'  OR
+				TC.mb_id = TM.id AND
+				TC.title LIKE '%${optionParam}%' AND 
+				TC.open = 'true'  OR
+				TC.mb_id = TM.id AND
+				TC.rmk LIKE '%${optionParam}%' AND 
+				TC.open = 'true' 
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>                                                                   
+	
+	<select id="select_me" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT
+		WHERE mb_id = #{mbId}
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<!-- 비공개는 구매를 할 수 없으므로, 굳이 거를 필요가 없을 것이라 생각함. - 이중길 - -->
+	<select id="select_buy" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT AS TC,
+		(SELECT co_id 
+		 FROM tb_content_payment
+		 WHERE mb_id = #{mbId}) AS BUY
+		WHERE TC.id = BUY.co_id
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<!-- 비공개는 공유를 할 수 없으므로, 굳이 거를 필요가 없을 것이라 생각함. - 이중길 - -->
+	<select id="select_share" parameterType="contentListVO" resultMap="result">
+		SELECT DISTINCT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT AS TC,
+		(SELECT ca_id 
+		 FROM TB_CONTENT_SHARE) AS TCS
+		WHERE TC.id = TCS.ca_id AND
+			  TC.mb_id = #{mbId}
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_share_table" parameterType="contentListVO" resultMap="result_table">
+		SELECT TCS.id, TCS.mb_id, TCS.type, TCS.url, TCS.regtime, TM.email
+		FROM tb_user AS TM,
+		(SELECT id, mb_id, type, url, regtime
+		FROM TB_CONTENT_SHARE
+		WHERE ca_id = #{mbId}) AS TCS
+		WHERE TCS.mb_id = TM.id
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_share_user" parameterType="contentListVO" resultMap="result_share_user">
+		SELECT DISTINCT email, name
+		FROM tb_user AS TM, 
+			(SELECT mb_id
+		 	 FROM TB_CONTENT_SHARE AS TCS,
+		 		(SELECT id
+		  		 FROM TB_CONTENT
+		  		 WHERE mb_id = #{mbId}) AS TC
+		  	 WHERE TCS.ca_id = TC.id) AS TCCS
+		WHERE TM.id = TCCS.mb_id
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_share_user_table" parameterType="contentListVO" resultMap="result_Usertable">
+		SELECT uuid, title, TM.email, TCS.id, TCS.mb_id, TCS.type, TCS.url, TCS.regtime
+		FROM TB_CONTENT AS TC,
+		(SELECT id, mb_id, type, url, regtime, ca_id
+		 FROM TB_CONTENT_SHARE) AS TCS,
+		(SELECT id, email
+		 FROM tb_user
+		 WHERE id = #{mbId}) AS TM
+		WHERE TCS.mb_id = TM.id AND 
+			  TCS.ca_id = TC.id
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_share_tracking_table" parameterType="contentListVO" resultMap="result_tracking">
+		SELECT *
+		FROM TB_CONTENT_SHARE_TRACKING
+		WHERE share_id = #{mbId}
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+
+	<!-- 사람인지 사물인지만 선택했을 때 -->
+	<select id="select_category" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT
+		WHERE ca_id = ${caId} AND
+			  open = 'true'
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_category_search" parameterType="contentListVO" resultMap="result">
+		SELECT TC.id, TC.uuid, TC.title, TC.rmk, TC.mb_id, TC.view_count, TC.share_count, TC.buy_count, TC.down_count, TC.orig_status, TC.open
+		FROM TB_CONTENT AS TC, tb_user AS TM
+		WHERE TC.mb_id = TM.id AND
+				TM.email LIKE '%${optionParam}%' AND
+				ca_id = ${caId} AND
+			  	TC.open = 'true' OR
+				TC.mb_id = TM.id AND
+				TC.title LIKE '%${optionParam}%' AND
+				ca_id = ${caId} AND
+			  	TC.open = 'true' OR
+				TC.mb_id = TM.id AND
+				TC.rmk LIKE '%${optionParam}%' AND
+				ca_id = ${caId} AND
+			  	TC.open = 'true'
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_category_me" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT
+		WHERE ca_id = ${caId} AND
+			  mb_id = #{mbId}	  
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_category_buy" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT AS TC,
+		(SELECT co_id 
+		 FROM tb_content_payment
+		 WHERE mb_id = #{mbId}) AS BUY
+		WHERE TC.id = BUY.co_id AND
+			  TC.ca_id = ${caId}
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_category_share" parameterType="contentListVO" resultMap="result">
+		SELECT DISTINCT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status
+		FROM TB_CONTENT AS TC,
+		(SELECT ca_id 
+		 FROM TB_CONTENT_SHARE) AS TCS
+		WHERE TC.id = TCS.ca_id AND
+			  TC.ca_id = ${caId} AND
+			  TC.mb_id = #{mbId}
+		ORDER BY id DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<!-- 조회수 공유수 등으로만 선택했을 때 -->
+	<select id="select_filter" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT
+		WHERE open = 'true'
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_filter_search" parameterType="contentListVO" resultMap="result">
+		SELECT TC.id, TC.uuid, TC.title, TC.rmk, TC.mb_id, TC.view_count, TC.share_count, TC.buy_count, TC.down_count, TC.orig_status, TC.open
+		FROM TB_CONTENT AS TC, tb_user AS TM
+		WHERE TC.mb_id = TM.id AND
+				TM.email LIKE '%${optionParam}%' AND
+			  	TC.open = 'true' OR
+				TC.mb_id = TM.id AND
+				TC.title LIKE '%${optionParam}%' AND
+			  	TC.open = 'true' OR
+				TC.mb_id = TM.id AND
+				TC.rmk LIKE '%${optionParam}%' AND
+			  	TC.open = 'true'
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_filter_me" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT
+		WHERE mb_id = #{mbId}
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+
+	<select id="select_filter_buy" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT AS TC,
+		(SELECT co_id 
+		 FROM tb_content_payment
+		 WHERE mb_id = #{mbId}) AS BUY
+		WHERE TC.id = BUY.co_id
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_filter_share" parameterType="contentListVO" resultMap="result">
+		SELECT DISTINCT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT AS TC,
+		(SELECT ca_id 
+		 FROM TB_CONTENT_SHARE) AS TCS
+		WHERE TC.id = TCS.ca_id AND
+			  TC.mb_id = #{mbId}
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+
+	<!-- 사람인지 사물인지와 조회수 공유수 등 전부 선택했을 때 -->
+	<select id="select_all" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status
+		FROM TB_CONTENT
+		WHERE ca_id = ${caId}
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_all_search" parameterType="contentListVO" resultMap="result">
+		SELECT TC.id, TC.uuid, TC.title, TC.rmk, TC.mb_id, TC.view_count, TC.share_count, TC.buy_count, TC.down_count, TC.orig_status, TC.open
+		FROM TB_CONTENT AS TC, tb_user AS TM
+		WHERE TC.mb_id = TM.id AND
+				TM.email LIKE '%${optionParam}%' AND
+				ca_id = ${caId} AND
+			  	TC.open = 'true' OR
+				TC.mb_id = TM.id AND
+				TC.title LIKE '%${optionParam}%' AND
+				ca_id = ${caId} AND
+			  	TC.open = 'true' OR
+				TC.mb_id = TM.id AND
+				TC.rmk LIKE '%${optionParam}%' AND
+				ca_id = ${caId} AND
+			  	TC.open = 'true'
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_all_me" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT
+		WHERE ca_id = ${caId} AND
+			  mb_id = #{mbId}
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_all_buy" parameterType="contentListVO" resultMap="result">
+		SELECT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT AS TC,
+		(SELECT co_id 
+		 FROM tb_content_payment
+		 WHERE mb_id = #{mbId}) AS BUY
+		WHERE TC.id = BUY.co_id AND
+			  TC.ca_id = ${caId}
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<select id="select_all_share" parameterType="contentListVO" resultMap="result">
+		SELECT DISTINCT id, uuid, title, rmk, mb_id, view_count, share_count, buy_count, down_count, orig_status, open
+		FROM TB_CONTENT AS TC,
+		(SELECT ca_id 
+		 FROM TB_CONTENT_SHARE) AS TCS
+		WHERE TC.id = TCS.ca_id AND
+			  TC.ca_id = ${caId} AND
+			  TC.mb_id = #{mbId}
+		ORDER BY ${filter} DESC
+		LIMIT #{startPoint}, #{endPoint}
+	</select>
+	
+	<!-- 사용자 관리 관련 쿼리 END -->
+	
+</mapper>

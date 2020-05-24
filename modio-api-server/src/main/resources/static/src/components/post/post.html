@@ -1,0 +1,343 @@
+<!-- 부트스트랩을 사용 -->
+<style>
+.post_container{
+	width:75%;
+	margin:auto;
+}
+
+.temp_col{
+	width:100%;
+	margin:auto;
+	padding-left:2%;
+	padding-right:2%;
+	text-align:left;
+}
+
+.certification_tb{
+	border: 1px solid #A0A0A0;
+	float: right;
+}
+
+.certification_tb td{
+	font-size:1.5rem;
+	color:#A0A0A0;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.certification_btn{
+	height:auto;
+	margin:auto;
+	vertical-align:top;
+}
+
+.temp_btn{
+	width:max-width;
+	height:auto;
+	vertical-align:top;
+}
+
+.right_view_text{
+	font-size:1.2rem;
+}
+
+</style>
+
+<div class="post_container">
+	<br/>
+	<div class="row">
+		<div class="col-md-9">
+			<h4 class="media-heading" style="font-size:1.8rem">{{title}}</h4>
+			<iframe width="100%" height="500px" src="{{setting.hostUrl}}/viewer/viewer_main.html?uu={{rp.params.id}}||{{orig_status}}" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel="" allowtransparency="true"></iframe>
+		
+			<div class="row">
+				<div class="temp_col" style="font-size:1rem;">
+					<!-- 2016년 12월 06일 화. 수정.
+					조회 수	:	{{view_count}}<br>
+					다운 수	:	{{down_count}}<br>
+					공유 수	:	{{share_count}}<br>
+					결제 수	:	{{buy_count}}<br> -->
+					<template [ngIf]="setting.accessToken != null">
+						<template [ngIf]="open == 'true'">
+							<img class="temp_btn" data-toggle="modal" data-target="#ShareModal" src="../../img/btn_share.png">
+							&nbsp;&nbsp;
+							<img class="temp_btn" (click)="embedded_tag()" data-toggle="modal" data-target="#EmbeddedModal" src="../../img/btn_tag.png">
+							&nbsp;&nbsp;
+							<img class="temp_btn" (click)="down_count_up()" src="../../img/btn_down.png">
+							&nbsp;&nbsp;
+							<img class="temp_btn" (click)="buy_count_up()" src="../../img/btn_payment.png">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</template>
+					</template>
+					
+					<!-- 관리자 아이디도 포함. -->
+					<template [ngIf]="setting.id == email || setting.id == 'admin@real3d.com'">
+						<img class="temp_btn" [routerLink]="['/Modifiedcontents', {sn: sn, category: category, uuid: id, user_id: email, title: title, rmk: rmk, orig_status: orig_status, extend: extend}]" src="../../img/btn_edit.png">
+						&nbsp;
+						<img class="temp_btn" [routerLink]="['/Thumnail', {uuid: id}]" src="../../img/btn_thumbnail_edit.png">
+						&nbsp;
+						<img class="temp_btn" (click)="delete_content()" src="../../img/btn_delete.png">
+					</template>
+					
+					<template [ngIf]="open == 'false'">
+						<div class="col-md-6" style="text-align:right" >
+							<img class="temp_btn" (click)="down_count_up()"  src="../../img/btn_down.png">
+							<img class="temp_btn" data-toggle="modal" data-target="#EmailShareModal" src="../../img/btn_secureshare.png">
+						</div>
+					</template>
+					
+					<template [ngIf]="orig_key != null">
+						<table class="certification_tb">
+							<tr>
+								<td style="text-align:center;">원본증명 문서</td>
+							</tr>
+							<tr>
+								<td><a href="http://119.195.163.135:3390/ssnt/certificate?id={{orig_key}}" target="_blank"><img class="certification_btn" alt="게시글 원본 증명하기" src="../../img/btn_certification.png"></a></td>
+							</tr>
+						</table>
+					</template>
+				</div>
+				
+				<template [ngIf]="setting.accessToken != null">
+					<template [ngIf]="open == 'true'">
+						<div class="col-md-6" style="text-align:right" >
+<!-- 							<button class="btn" (click)="buy_count_up()">결제</button>
+							<button class="btn" (click)="down_count_up()">다운</button>
+							<button class="btn btn-primary" data-toggle="modal" data-target="#ShareModal">SNS 공유</button>
+							<button class="btn" (click)="embedded_tag()" data-toggle="modal" data-target="#EmbeddedModal">임베디드 태그</button> -->
+						</div>
+					</template>
+					<!--
+					<template [ngIf]="open == 'false'">
+						<div class="col-md-6" style="text-align:right" >
+							<button class="btn btn-primary" data-toggle="modal" data-target="#EmailShareModal">안전 공유</button>
+							<button class="btn btn-primary" data-toggle="modal" data-target="#DownloadContent">다운로드</button>
+						</div>
+					</template>
+					-->
+				</template>
+				<!-- 
+				<template [ngIf]="setting.accessToken != null && open == false">
+					<!-- Email 공유 에서 안전 공유로 변경  
+					<button class="btn btn-primary" data-toggle="modal" data-target="#EmailShareModal">안전 공유</button>
+					<button class="btn btn-primary" data-toggle="modal" data-target="#DownloadContent">다운로드</button>
+				</template>
+				-->
+				<!-- SNS Share Modal -->
+				<div class="modal fade" id="ShareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top:7%;">
+					  <div class="modal-dialog">
+						    <div class="modal-content">
+						      	<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span>
+								<span class="sr-only">Close</span></button>
+								<p class="modal-title" id="myModalLabel" style="font-size:1.2rem;">SNS 공유하기</p>
+							    </div>
+							    <div class="modal-body">
+									<p style="font-size:1.0rem;">공유 URL : 3dz.kr?{{redirect_code}}</p> <br>									
+									<button type="button" class="btn btn-primary" (click)="share_FaceBook()" data-dismiss="modal">FaceBook</button>
+									<button type="button" class="btn btn-primary" (click)="share_Twitter()" data-dismiss="modal">Twitter</button>
+							    </div>
+							    <div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							    </div>
+						    </div>
+					  </div>
+				</div>
+				
+				<!-- Email Share Modal -->
+				
+					<div class="modal modal-transparent fade in" id="EmailShareModal" tabindex="-1" role="dialog" aria-labelledby="myEmailModalLabel" aria-hidden="true" style="padding-top:7%;">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header" style="text-align:center">
+					        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+					        <h4 class="modal-title" id="myModalLabel" style="font-size:18px;">공유 생성</h4>
+					      </div>
+					      <div class="modal-body">
+					      <form role="form" id="EmailshareForm" action="{{setting.hostUrl}}/api/v2/content/emailshare" method="post" >
+					      	  <input type="hidden" name="mbId" value="{{setting.id}}">
+					          <input type="hidden" name="accessToken" value="{{setting.accessToken}}">
+					          <input type="hidden" name="id" value="{{id}}">
+					          
+					      	  <div class="alert alert-info" id="sharefilename"><h1 style="font-size:1.0rem;">{{fname}}</h1></div>
+					      	  
+					      	  <div class="form-group">
+					      	  <label for="radios">공유 타입:</label>
+					      	  <div id="radios" style="border-color:#0480be; border-style:solid; padding:5px; border-width:thin">
+					      	  <label class="radio-inline">
+					      	     <input type="radio" name="type" value="View@Share" id="radio_vs" checked="">뷰어 공유하기
+					      	  </label>
+					          <label class="radio-inline">
+					             <input type="radio" name="type" value="T-Code" id="radio_tcode">안전파일 공유하기
+					          </label>
+					          </div>      	  
+					          </div>
+					          <div class="form-group">
+					              <label for="sharee">공유 대상:</label>
+					              <input type="email" class="form-control" name="customerId" id="sharee" placeholder="공유 받을 사람의 이메일 주소">
+					          	  
+					          </div>
+					          <div class="form-group">
+					              <label for="pincode">공유 암호:</label>
+					              <input type="number" class="form-control" name="password" id="pincode" placeholder="4~8자리의 숫자로 핀코드를 입력하세요">
+					          </div>
+					          <input type="password" autocomplete="off" style="display: none;">
+					          <div class="form-group">
+					              <label for="count">공유 횟수:</label>
+					              <input type="number" class="form-control" name="maxDown" id="count" value="10">
+					          </div>
+					          <div class="form-group">
+					              <label for="memo">공유 용도:</label>
+					              <input type="text" class="form-control" name="memo" id="memo" placeholder="공유 목적을 입력하세요">
+					          </div>
+					          
+					          <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+					          <button type="button" class="btn btn-primary" id="sharebutton" (click)="share_Email()" data-dismiss="modal">생성</button>
+					      </form>
+					      </div>
+					    </div>
+					  </div>
+					</div>  
+				<!--  div class="modal fade" id="EmailShareModal" tabindex="-1" role="dialog" aria-labelledby="myEmailModalLabel" aria-hidden="true" >
+					  <div class="modal-dialog">
+						    <div class="modal-content">
+						      	<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span>
+								<span class="sr-only">Close</span></button>
+								<p class="modal-title" id="myEmailModalLabel" style="font-size:1.2rem;">Email 공유하기</p>
+							    </div>
+							    <div class="modal-body">
+									<p style="font-size:1.0rem;">공유 URL : 3dz.kr?{{redirect_code}}</p> <br>									
+									<button type="button" class="btn btn-primary" (click)="share_FaceBook()" data-dismiss="modal">FaceBook</button>
+									<button type="button" class="btn btn-primary" (click)="share_Twitter()" data-dismiss="modal">Twitter</button>
+							    </div>
+							    <div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							    </div>
+						    </div>
+					  </div>
+				</div-->
+				
+				<!-- Embedded Share Modal -->
+				<div class="modal fade" id="EmbeddedModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top:7%;">
+					  <div class="modal-dialog">
+						    <div class="modal-content">
+						      	<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">
+								<span aria-hidden="true">×</span>
+								<span class="sr-only">Close</span></button>
+								<p class="modal-title" id="myModalLabel" style="font-size:1.2rem;">임베디드 태그(IFRAME)</p>
+							    </div>
+							    <div class="modal-body">
+									<p style="font-size:1.0rem;">{{embedded_code}}</p>								
+							    </div>
+							    <div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							    </div>
+						    </div>
+					  </div>
+				</div>
+				
+			</div>
+		
+			<!-- 댓글 추가 예정 코드
+			<div class="row">
+				<div class="col-md-6" style="font-size:1.1rem; margin-bottom:20px;">
+					<br/>
+					<b>0개의 댓글</b>
+					<br/>
+				</div>
+			</div>
+			<hr style="width:100%; border:1px; thin solid red;"/>
+			<div class="row" style="margin-bottom:50px">
+				<div class="col-md-1">
+					<img src="{{setting.hostUrl}}/obj/201610/userthumnail.JPG" width="50px" height="50px">
+				</div>
+				<div class="col-md-11">
+					<textarea class="form-control" rows="1" placeholder="댓글 입력"></textarea>
+					<button class="btn btn-primary" style="margin-top:10px;">게시</button>
+				</div>			
+			</div>
+		
+			<div class="row">
+				<div class="col-md-1">
+					<img src="{{setting.hostUrl}}/obj/201610/userthumnail.JPG" width="50px" height="50px">
+				</div>
+				<div class="col-md-11">
+					<div style="border: 2px solid #D8D8D8; padding:15px; border-radius: 10px; font-size:1rem;">
+						작성자 이메일<br>
+						작성글<br>
+						작성날짜<br>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="row" *ngFor="#post of posts">
+						<a [routerLink]="['/Post', {id: post.uuid}]"> <img
+							src='http://localhost:9000/obj/201610/{{post.uuid}}.png' alt="Card image cap"
+							class="img-responsive">
+							<p class="card-text">{{post.uuid}}</p>
+							<p class="card-text">{{post.title}}</p>
+						</a>
+					</div>
+				
+			</div>
+			-->
+	  </div>
+	  <div class="col-md-3" style="border: 2px solid #ADADAD; border-radius: 10px; padding: 20px;">
+	  
+		<!-- <h4 class="media-heading" style="font-size:1rem; margin-top:35px;"></h4>  -->
+		<template [ngIf]="setting.id == email">
+		<!-- 
+		<div style="margin-bottom:50px; height:100%;">
+			<div class="col-md-3">
+				<button class="btn btn-primary" style="margin-left:-40%;" [routerLink]="['/Modifiedcontents', {sn: sn, category: category, uuid: id, title: title, rmk: rmk, orig_status: orig_status, extend: extend}]">수정</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-primary" style="margin-left:-8%;" [routerLink]="['/Thumnail', {uuid: id}]">썸네일 변경</button>
+			</div>
+			<div class="col-md-3">
+				<button class="btn btn-primary" style="margin-left:-40%;" (click)="delete_content()">삭제</button>
+			</div>
+		</div>
+		 -->
+		</template>
+		
+		<div>
+			<p class="right_view_text"><img src="../../img/mark.jpg"> 업로더 ID</p>
+		</div>
+		<div style="/* border: 2px solid #D8D8D8; */ padding:15px; border-radius: 5px; background-color:#FAFAFA; margin-bottom:20px; height:100%; font-size:1rem; text-align:center;">
+			<p style = "word-break:normal;">{{email}}</p>
+		</div>
+		
+		<div>
+			<p class="right_view_text"><img src="../../img/mark.jpg"> 콘텐츠 설명</p>
+		</div>
+		<div style="/* border: 2px solid #D8D8D8; */ padding:15px; border-radius: 10px; background-color:#FAFAFA; margin-bottom:20px; height:380px; font-size:1rem;">
+			<p style = "word-break:normal;">{{rmk}}</p>
+		</div>
+		
+		<div>
+			<p class="right_view_text"><img src="../../img/mark.jpg"> 콘텐츠 파일</p>
+		</div>
+		<div style="/* border: 2px solid #D8D8D8; */ padding:15px; border-radius: 10px; background-color:#FAFAFA; margin-bottom:20px; height:100%; font-size:1rem;">
+			<p style = "word-break:normal;">{{fname}} ({{fsize}} byte)</p>
+		</div>
+		
+		<div>
+			<p class="right_view_text"><img src="../../img/mark.jpg"> 콘텐츠 파일</p>
+		</div>
+		<div style="border-radius: 10px; background-color:#FAFAFA; height:100%; font-size:1rem;">
+			<p>조회 수	:	{{view_count}}</p>
+			<p>다운 수	:	{{down_count}}</p>
+			<p>공유 수	:	{{share_count}}</p>
+			<p>결제 수	:	{{buy_count}}</p>
+		</div>
+		
+	  </div>
+	</div>
+</div>
+

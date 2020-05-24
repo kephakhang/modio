@@ -1,0 +1,57 @@
+<div id="header" role="banner">
+
+  <div id="preloader">
+    <div id="load"></div>
+  </div>
+  
+    <!-- div ng-show="AILoading" class="preloader">
+	    <div id="preloader">
+	    	<div id="load"></div>
+	  	</div>
+    </div-->
+    <div ng-hide="AILoading" ng-view></div>
+  
+  <div id="header-inner">
+
+    <div id="logo">
+      <a href="/"><!-- img alt="solidmodel" src="/img/logo.jpg"--><h1>SolidModel</h1></a>
+    </div>
+
+    <a href="#nav" id="toggle-nav"><i class="fa fa-bars fa-2x"></i></a>
+    
+    
+
+    <ul id="nav" role="navigation">
+      <li id="t-search" role="search">
+        <form id="search" action="/search">
+          <input class="search-text placeholder" type="text" name="q" placeholder="&#xF002; Search " value="">
+          
+        </form>
+      </li>     
+      <li id="t-signup">
+        <a href="/signup">회원가입</a>
+      </li>
+      <li id="t-signin">
+        <a href="/login">
+          <span>로그인</span>
+		</a>      
+	  </li>
+      <li id="t-content">
+        <a class="has-sub" [routerLink]="['/Home']">컨텐츠<b class="caret"></b></a>
+        <ul class="tabs">
+			  <li><a [routerLink]="['/Home']">공유</a></li>
+		</ul>
+
+      </li>
+      <!-- li id="t-user">
+        <a class="has-sub" href="/user">회원정보<b class="caret"></a>
+        <ul class="tabs">
+		  <li><a href="/userUpdate">정보수정</a></li>
+		  <li><a href="/findPassword">암호찾기</a></li>	
+		  <li class="separate"><a href="/exit">회원탈퇴</a></li>
+		</ul>
+	  </li-->
+    </ul>
+  </div>
+  <router-outlet></router-outlet>
+</div> <!-- /header -->

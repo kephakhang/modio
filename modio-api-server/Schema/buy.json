@@ -1,0 +1,1 @@
+{"_id":{"$oid":"59a7aabf6bde530b842e3d82"},"sort":"point","userId":"599b717238f55f031c8b1609","goods":{"$ref":"goods","$id":{"$oid":"599a677138f55f031c8b15fe"}},"store":{"$ref":"store","$id":{"$oid":"599a442538f55f031c8b15f4"}},"price":3000.0,"paytime":{"$date":"2017-08-31T00:00:00.000Z"},"buytime":{"$date":"2017-08-31T00:00:00.000Z"}}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ContentCount">
+
+<!-- 사용자 관리 관련 쿼리 START -->
+
+<update id="update_viewcount" parameterType="String">
+    UPDATE TB_CONTENT
+    SET view_count = view_count + 1     
+    WHERE uuid = #{uuid}
+</update>
+
+<update id="update_sharecount" parameterType="String">
+    UPDATE TB_CONTENT
+    SET share_count = share_count + 1       
+    WHERE uuid = #{uuid}
+</update>
+
+<update id="update_buycount" parameterType="String">
+    UPDATE TB_CONTENT
+    SET buy_count = buy_count + 1       
+    WHERE uuid = #{uuid}
+</update>
+
+<update id="update_downcount" parameterType="String">
+    UPDATE TB_CONTENT
+    SET down_count = down_count + 1     
+    WHERE uuid = #{uuid}
+</update>
+
+<update id="update_redirectcode" parameterType="content">
+    UPDATE TB_CONTENT
+    SET redirect_code = #{redirectCode}     
+    WHERE uuid = #{id}
+</update>
+
+<!-- 사용자 관리 관련 쿼리 END -->
+
+</mapper>

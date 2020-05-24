@@ -1,0 +1,3 @@
+rootProject.name = 'modio'
+include 'modio-oauth2-server'
+include 'modio-api-server'

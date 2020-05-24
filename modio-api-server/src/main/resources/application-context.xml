@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+				http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-2.0.xsd">
+
+	<context:annotation-config/>
+	<context:property-placeholder/>
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages/messages</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
+		<constructor-arg ref="messageSource"/>
+	</bean>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+  		<property name="maxUploadSize" value="104857600" /> <!--  최대 사이즈 (100Mb 지정)-->
+	</bean>
+	
+	<bean id="apiListingResourceJSON" class="io.swagger.jaxrs.listing.ApiListingResource"/>
+    <bean id="apiDeclarationProvider" class="io.swagger.jaxrs.listing.SwaggerSerializers"/>
+    <bean id="apiRequestInterceptor" class="com.youngplussoft.modio.common.ApiRequestInterceptor"/>
+	<bean id="message" class="com.youngplussoft.common.Message" />
+	<bean id="mail" class="com.youngplussoft.common.Mail" />
+	<bean id="sms" class="com.youngplussoft.common.Sms" />
+	<bean id="tokenRepository" class="com.youngplussoft.jpa.repository.TokenRepository" />
+	<bean id="buyAtStoreTemplate" class="com.youngplussoft.modio.jpa.template.BuyAtStoreTemplate" />
+	<bean id="buyTemplate" class="com.youngplussoft.modio.jpa.template.BuyTemplate" />
+	<bean id="goodsCategoryTemplate" class="com.youngplussoft.modio.jpa.template.GoodsCategoryTemplate" />
+	<bean id="goodsTemplate" class="com.youngplussoft.modio.jpa.template.GoodsTemplate" />
+	<bean id="imageTemplate" class="com.youngplussoft.modio.jpa.template.ImageTemplate" />
+	<bean id="mobileConfirmTemplate" class="com.youngplussoft.modio.jpa.template.MobileConfirmTemplate" />
+	<bean id="storeBookmarkTemplate" class="com.youngplussoft.modio.jpa.template.StoreBookmarkTemplate" />
+	<bean id="storeCategoryTemplate" class="com.youngplussoft.modio.jpa.template.StoreCategoryTemplate" />
+	<bean id="storeFrequentTemplate" class="com.youngplussoft.modio.jpa.template.StoreFrequentTemplate" />
+	<bean id="storeTemplate" class="com.youngplussoft.modio.jpa.template.StoreTemplate" />
+	<bean id="userTemplate" class="com.youngplussoft.modio.jpa.template.UserTemplate" />
+	<bean id="pointChargeTemplate" class="com.youngplussoft.modio.jpa.template.PointChargeTemplate" />
+	<bean id="tableBookingTemplate" class="com.youngplussoft.modio.jpa.template.TableBookingTemplate" />
+	<bean id="websocketClient" class="com.youngplussoft.modio.common.WebsocketClient" />
+	<bean id="websocketTemplate" class="com.youngplussoft.modio.jpa.template.WebsocketTemplate"/>
+
+	<!--bean id="mongoClient" class="org.springframework.data.mongodb.core.MongoClientFactoryBean">
+		<property name="host" value="localhost"/>
+		<property name="port" value="27017"/>
+	</bean>
+
+	<bean id="mongoDbFactory" class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
+		<constructor-arg name="mongoClient" ref="mongoClient"/>
+		<constructor-arg name="databaseName" value="modio"/>
+	</bean>
+
+	<bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+		<constructor-arg name="username" value="modio" />
+		<constructor-arg name="password" value="modio" />
+	</bean>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+		<constructor-arg name="mongoConverter" ref="mappingConverter"/>
+		<property name="writeResultChecking" value="EXCEPTION"/>
+		<property name="writeConcern" value="FSYNC_SAFE"/>
+		<constructor-arg name="userCredentials" ref="userCredentials"/>
+	</bean-->
+
+	<!--bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<property name="writeResultChecking" value="EXCEPTION"/>
+		<property name="writeConcern" value="FSYNC_SAFE"/>
+		<constructor-arg ref="myRs"/>
+		<constructor-arg name="databaseName" value="mydb"/>
+		<constructor-arg name="userCredentials" ref="userCredentials"/>
+	</bean-->
+
+
+
+	<!--bean class="org.springframework.data.mongodb.core.MongoExceptionTranslator"/-->
+
+	<!--  Mongo aspect config -->
+	<!--bean class="org.springframework.data.mongodb.crossstore.MongoDocumentBacking"
+		  factory-method="aspectOf">
+		<property name="changeSetPersister" ref="mongoChangeSetPersister"/>
+	</bean>
+	<bean id="mongoChangeSetPersister"
+		  class="org.springframework.data.mongodb.crossstore.MongoChangeSetPersister">
+		<property name="mongoTemplate" ref="mongoTemplate"/>
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean-->
+
+	<mongo:repositories base-package="com.youngplussoft.jpa.repository, com.youngplussoft.modio.jpa.repository" />
+	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+
+
+</beans>

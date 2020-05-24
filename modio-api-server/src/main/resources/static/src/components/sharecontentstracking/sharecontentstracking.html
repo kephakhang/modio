@@ -1,0 +1,25 @@
+<div class="container">
+	<h2 style="font-size:1.0rem; vertical-align:bottom;"><img src="../../img/mark.jpg"> 컨텐츠 열람 정보</h2>  
+	<div class="table-responsive">
+	  <table class="table">
+	    <thead>
+	      	<tr style="font-size:1.2rem;">
+				<th>#</th>
+				<th>IP</th>
+				<th>열람 시간</th>
+	    	</tr>
+	    </thead>
+	    <tbody *ngFor="#post of posts">
+	      <tr style="font-size:1.0rem;">
+			<td>*</td>
+			<td>{{post.ip}}</td>
+			<td>{{post.regtime}}</td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+	
+	<div class="text-xs-center">
+		<button class="btn btn-primary" (click)="loadMore();">콘텐츠더보기</button>
+	</div>
+</div>

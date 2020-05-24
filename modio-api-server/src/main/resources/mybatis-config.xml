@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+       Copyright 2015-2016 the original author or authors.
+       Licensed under the Apache License, Version 2.0 (the "License");
+       you may not use this file except in compliance with the License.
+       You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+       Unless required by applicable law or agreed to in writing, software
+       distributed under the License is distributed on an "AS IS" BASIS,
+       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       See the License for the specific language governing permissions and
+       limitations under the License.
+-->
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+        
+<configuration>
+
+	<settings>
+	    <setting name="logImpl" value="LOG4J"/>
+	 </settings>
+	 
+    <typeAliases>
+	    <typeAlias alias="menuVO" type="com.youngplussoft.modio.db.model.MenuVO" />	
+	    <typeAlias alias="configVO" type="com.youngplussoft.modio.db.model.ConfigVO" />	
+	    <typeAlias alias="userVO" type="com.youngplussoft.modio.db.model.UserVO" />	
+	    <typeAlias alias="boardVO" type="com.youngplussoft.modio.db.model.BoardVO" />
+	    <typeAlias alias="imageVO" type="com.youngplussoft.modio.db.model.ImageVO" />
+	    <typeAlias alias="storeVO" type="com.youngplussoft.modio.db.model.StoreVO" />
+	    <typeAlias alias="goodsVO" type="com.youngplussoft.modio.db.model.GoodsVO" />
+	    
+	    <typeAlias alias="user" type="io.swagger.model.User" />	
+	    <typeAlias alias="login" type="io.swagger.model.Login" />
+	    <typeAlias alias="board" type="io.swagger.model.Board" />
+	    <typeAlias alias="goods" type="io.swagger.model.Goods" />
+	    <typeAlias alias="store" type="io.swagger.model.Store" />
+	</typeAliases>
+    
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${spring.datasource.driver-class-name}"/>
+                <property name="url" value="${spring.datasource.url}"/>
+                <property name="username" value="${spring.datasource.username}"/>
+                <property name="password" value="${spring.datasource.password}" />
+            </dataSource>
+        </environment>
+    </environments>
+    
+    <mappers>
+        <mapper resource="mapper/Menu.xml"/>
+        <mapper resource="mapper/Config.xml"/>
+        <mapper resource="mapper/User.xml"/>
+        <mapper resource="mapper/Board.xml"/> 
+        <mapper resource="mapper/Image.xml"/> 
+        <mapper resource="mapper/Store.xml"/> 
+        <mapper resource="mapper/Goods.xml"/> 
+    </mappers>
+</configuration>

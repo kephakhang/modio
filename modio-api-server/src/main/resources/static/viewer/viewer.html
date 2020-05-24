@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Yally obj_json demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #111;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			.test {
+				position: fixed;
+				
+				z-index:4;
+				width: 500px;
+			}
+			
+			#myProgress {
+			  z-index:4;
+			  position: absolute; 
+			  left: 50%; 
+			  transform: translateX(-50%);
+			  margin-top:23%;
+			  width: 30%;
+			  height: 2%;
+			  background-color: #fff;
+			  align = center;
+			}
+
+			#myBar {
+			  position: absolute;
+			  width: 10%;
+			  height: 100%;
+			  background-color: #4CAF50;
+			}
+
+			#label {
+			  text-align: center;
+			  line-height: 15px;
+			  color: black;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="lib/three.js"></script>
+		<script src="lib/Detector.js"></script>
+		<script src="lib/stats.min.js"></script>
+		<script src="lib/DDSLoader.js"></script>
+		<script src="lib/Projector.js"></script>
+		<script src="lib/Setting.js"></script>
+		
+		<!-- 움직임 라이브러리(회전 줌인 이동) -->
+		<script src="lib/OrbitControls.js"></script>
+		
+		<!-- 메뉴 라이브러리 -->
+		<script src="lib/dat.gui.min.js"></script>
+		<script src="lib/FirstPersonControls.js"></script>
+
+		<div id="myProgress">
+		  <div id="myBar">
+			<div id="label">Loading</div>
+		  </div>
+		</div>
+		
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+			var SCREEN_WIDTH = window.innerWidth;
+			var SCREEN_HEIGHT = window.innerHeight;
+
+			var container, stats;
+			var camera, scene, renderer, controls, m_controls;;
+			var mixers = [];
+
+			var clock = new THREE.Clock();
+
+			var params = getUrlParams();
+			console.log("uuid(viewer.html) : " + params.uu);
+
+			var mesh, zmesh, geometry, wiremesh, flatmesh, gourmesh, phongmesh, mesh_array;
+			// MATERIALS 종류들 실선, 각진형태, 민무늬, 광택
+			var effectController = new Array();
+			var wireMaterial, flatMaterial, gouraudMaterial, phongMaterial;
+			var materialColor = new THREE.Color();
+			materialColor.setRGB( 0.051, 0.153, 0.051 );
+			wireMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFF00, wireframe: true } ) ;
+			flatMaterial = new THREE.MeshPhongMaterial( { color: materialColor, specular: 0x0, shading: THREE.FlatShading, side: THREE.DoubleSide } );
+			gouraudMaterial = new THREE.MeshLambertMaterial( { color: materialColor, side: THREE.DoubleSide } );
+			phongMaterial = new THREE.MeshPhongMaterial( { color: materialColor, shading: THREE.SmoothShading, side: THREE.DoubleSide } );
+			
+			init();
+			
+			function init() {
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+				camera = new THREE.PerspectiveCamera( 10, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
+				
+				camera.target = new THREE.Vector3( 0, 0, 0 );
+
+				scene = new THREE.Scene();
+
+				// 물체의 Lights
+				scene.add( new THREE.AmbientLight( 0xcccccc ) );
+
+				
+				//light 코드. 빛이 없으면, 재질 변경이 안됨.
+				var directionalLight = new THREE.DirectionalLight( 0xffeedd, 1.5 );
+				directionalLight.position.set( 0, -70, 100 ).normalize();
+				scene.add( directionalLight );
+				
+				//
+				var percent;
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						percent = Math.round(percentComplete, 2);
+						if(percent == 100) {
+							move(99, false);
+							console.log(percent);
+						}
+						else {
+							move(percent, false);
+							console.log(percent);
+						}
+						
+					}
+				};
+
+				var onError = function ( xhr ) {
+					console.log('error : ' + xhr);
+				};
+				
+				THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+				var loader = new THREE.JSONLoader();
+				var callbackMale = function ( geometry, materials ) { 
+					createScene( geometry, materials, 1.0, 1.0, 1.0, 0 ); 
+					move(100, true);
+				};
+		
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+//						alert( Math.round(percentComplete, 2) + '% downloaded' );
+						move(Math.round(percentComplete, 2), false);
+					}
+				};
+
+				var onError = function ( xhr ) {
+					alert('error : ' + xhr);
+				};
+				var xhr = new XMLHttpRequest();
+				var url = 'http://119.195.163.135:3380/api/v2/content/getyyyymm/' + params.uu;
+				xhr.onreadystatechange = function() {
+					if(xhr.readyState == 4) {
+						if(xhr.state == 200) {
+							console.log("save dir print : " + xhr.response);
+							loader.load( 	hostUrl + "/obj/" + 
+											xhr.response  +
+											"/" +
+											params.uu + ".json",
+											callbackMale, onProgress, onError 
+										);
+						}
+						else {
+							console.log("save dir print error : " + xhr.response);
+							loader.load( 	hostUrl + "/obj/" + 
+											xhr.response  +
+											"/" +
+											params.uu + ".json",
+											callbackMale, onProgress, onError 
+										);
+						}
+					}
+				};
+				xhr.open('GET', url, true);
+        			xhr.send(null);
+//				loader.load( hostUrl + "/api/v2/content/model/" + params.uu , callbackMale, onProgress, onError );
+//				loader.load( "http://yally.net:9000/obj/201610/" + params.uu + ".json" , callbackMale, onProgress, onError );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setClearColor( "#FAFAFA" );		//배경 색
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+				renderer.domElement.style.position = "relative";
+
+				container.appendChild( renderer.domElement );
+				
+				renderer.gammaInput = true;
+				renderer.gammaOutput = true;
+
+				renderer.shadowMap.enabled = true;
+
+				//마우스를 통한 움직임 코드
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls.target.set( 1, 1, 1 );
+				camera.position.set( 100, 100, 100 );
+				controls.update();
+				
+				window.addEventListener( 'resize', onWindowResize, false );
+
+				animate();
+				setupGui();
+			}
+			var elem = document.getElementById("myBar");
+			var myProg = document.getElementById("myProgress");
+			
+			function fullscreen() {
+				if (
+					!document.fullscreenElement &&    // alternative standard method
+					!document.mozFullScreenElement && !document.webkitFullscreenElement
+				){  // current working methods
+					if (document.documentElement.requestFullscreen) {
+						document.documentElement.requestFullscreen();
+					}
+					else if (document.documentElement.mozRequestFullScreen) {
+					  document.documentElement.mozRequestFullScreen();
+					}
+					else if (document.documentElement.webkitRequestFullscreen) {
+					  document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+					}
+				}
+				else {
+					if (document.cancelFullScreen) {
+						document.cancelFullScreen();
+					}
+					else if (document.mozCancelFullScreen) {
+						document.mozCancelFullScreen();
+					}
+					else if (document.webkitCancelFullScreen) {
+						document.webkitCancelFullScreen();
+					}
+				}			
+			}
+			function smallscreen() {
+			}
+
+			function setupGui() {
+				effectController = {
+					controler: "orbit",
+					screen: "smallscreen",
+					newShading: "original"
+				};
+			
+				var gui = new dat.GUI();				
+				h = gui.add( effectController, "controler", [ "orbit", "firstperson"] ).name( "Controller" ).onChange( render );
+				h = gui.add( effectController, "newShading", [ "original", "wireframe", "flat", "smooth", "glossy"] ).name( "Shading" ).onChange( render );
+				h = gui.add( effectController, "screen", [ "smallscreen", "fullscreen"] ).name( "Screen" ).onChange( render );
+			}
+
+			function getUrlParams() {
+			    var params = {};
+			    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+			    return params;
+			} 
+			
+			function move(width, clean_val) {
+			  frame();
+			  //타이머 이벤트 등록
+//			  var id = setInterval(frame, 30);
+			  function frame() {
+				if (clean_val == true) {
+				  
+				  
+				  //로딩바 삭제.
+				  myProg.style.display = "none";
+				  
+				  //타이머 이벤트 해제
+//				  clearInterval(id);				  
+				} else {
+//				  clearInterval(id);
+				  elem.style.width = width + '%';
+				  document.getElementById("label").innerHTML = width * 1  + '%';
+				}
+			  }
+			}
+			
+			function createScene( geometry, materials, x, y, z, b ) {
+
+				zmesh = new THREE.Mesh( geometry, new THREE.MultiMaterial( materials ) );
+				zmesh.position.set( x, y, z );
+				zmesh.scale.set( 1, 1, 1 );
+				scene.add( zmesh );
+
+				wiremesh = new THREE.Mesh( geometry, wireMaterial );
+				wiremesh.position.set( x, y, z );
+				wiremesh.scale.set( 1, 1, 1 );
+				
+				flatmesh = new THREE.Mesh( geometry, flatMaterial );
+				flatmesh.position.set( x, y, z );
+				flatmesh.scale.set( 1, 1, 1 );
+
+				gourmesh = new THREE.Mesh( geometry, gouraudMaterial );
+				gourmesh.position.set( x, y, z );
+				gourmesh.scale.set( 1, 1, 1 );
+
+				phongmesh = new THREE.Mesh( geometry, phongMaterial );
+				phongmesh.position.set( x, y, z );
+				phongmesh.scale.set( 1, 1, 1 );
+
+				//뒤 사진이미지들 보이는 것. 디버깅용으로 사용할 것.(첨부된 이미지 파일들 목록이 뒤에 나온다.)
+//				createMaterialsPalette( materials, 100, b );
+			}
+
+			function onWindowResize( event ) {
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+			}
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				render();
+
+			}
+
+			var before_text_shading = effectController.newShading;
+			var before_text_screen = effectController.screen;
+			var before_text_controller = effectController.controler;
+			function render() {
+
+				if(before_text_shading != effectController.newShading) {
+					//createScene( geometry, materials, 0, 0, 0, 0 ); 
+					console.log("check " + before_text_shading + " " + effectController.newShading);
+					if(effectController.newShading == 'original') {
+						if(before_text_shading == 'wireframe') {scene.remove( wiremesh );	scene.add( zmesh );}
+						else if(before_text_shading == 'flat') {scene.remove( flatmesh );	scene.add( zmesh );}
+						else if(before_text_shading == 'smooth') {scene.remove( gourmesh );	scene.add( zmesh );}
+						else if(before_text_shading == 'glossy') {scene.remove( phongmesh );scene.add( zmesh );}
+						else {}
+						console.log("original");
+					}
+					else if(effectController.newShading == 'wireframe') {
+						if(before_text_shading == 'original') {scene.add( wiremesh );}
+						else if(before_text_shading == 'flat') {scene.remove( flatmesh );	scene.add( wiremesh );}
+						else if(before_text_shading == 'smooth') {scene.remove( gourmesh );	scene.add( wiremesh );}
+						else if(before_text_shading == 'glossy') {scene.remove( phongmesh );scene.add( wiremesh );}
+						else {}
+						console.log("wireframe");
+					}
+					else if(effectController.newShading == 'flat') {
+						if(before_text_shading == 'original') {scene.remove( zmesh );	scene.add( flatmesh );}
+						else if(before_text_shading == 'wireframe') {scene.remove( wiremesh );	scene.add( flatmesh );}
+						else if(before_text_shading == 'smooth') {scene.remove( gourmesh );	scene.add( flatmesh );}
+						else if(before_text_shading == 'glossy') {scene.remove( phongmesh );scene.add( flatmesh );}
+						else {}
+						console.log("flat");
+					}
+					else if(effectController.newShading == 'smooth') {
+						if(before_text_shading == 'original') {scene.remove( zmesh );	scene.add( gourmesh );}
+						else if(before_text_shading == 'wireframe') {scene.remove( wiremesh );	scene.add( gourmesh );}
+						else if(before_text_shading == 'flat') {scene.remove( flatmesh );	scene.add( gourmesh );}
+						else if(before_text_shading == 'glossy') {scene.remove( phongmesh );scene.add( gourmesh );}
+						else {}
+						console.log("smooth");
+					}
+					else if(effectController.newShading == 'glossy') {
+						if(before_text_shading == 'original') {scene.remove( zmesh );	scene.add( phongmesh );}
+						else if(before_text_shading == 'wireframe') {scene.remove( wiremesh );	scene.add( phongmesh );}
+						else if(before_text_shading == 'flat') {scene.remove( flatmesh );	scene.add( phongmesh );}
+						else if(before_text_shading == 'smooth') {scene.remove( gourmesh );scene.add( phongmesh );}
+						else {}
+						console.log("glossy");
+					}
+				}		
+				else {
+				}
+				renderer.render( scene, camera );
+				before_text_shading = effectController.newShading;
+
+				if(before_text_screen != effectController.screen) {
+					fullscreen();
+					before_text_screen = effectController.screen;
+				}
+				
+				/*
+				컨트롤러 미구현
+				if(before_text_controller != effectController.controler) {
+					if(effectController.controler == "orbit") {
+						m_controls.update();
+						console.log("orbit");
+					}
+					else if(effectController.controler == "firstperson"){
+						controls.update( clock.getDelta() );
+						console.log("firstperson");
+					}	
+					else {
+						console.log("ee");
+					}
+				}
+				else {
+				}
+				before_text_controller = effectController.controler;
+				*/
+			}
+
+		</script>
+
+	</body>
+</html>

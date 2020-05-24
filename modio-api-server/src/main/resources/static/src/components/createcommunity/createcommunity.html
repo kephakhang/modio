@@ -1,0 +1,40 @@
+
+<style>
+.header_group{
+	width:100%;
+}
+.content_board{
+	width:100%;
+}
+</style>
+<div class="container">
+	<h1 style="font-size:1.2rem; vertical-align:top;"><img src="../../img/mark.jpg"> 게시글 작성</h1>
+	<hr>
+	
+	<div id="menu" style="text-align:right; padding-right:3%;">
+	</div>
+	
+	<div class="col-md-12">
+		<div class="row">
+			<label class="control-label col-sm-2" for="title">
+				<h4 class="media-heading" style="font-size:1.4rem">제목</h4></label>
+			<div class="col-sm-10">
+				<input type="title" class="form-control" id="title"
+					placeholder="제목을 입력하여 주세요.">
+			</div>
+		</div>
+		<hr>
+		<!-- 글내용 적는곳 -->
+		<h4 class="media-heading" style="font-size:1.4rem">내용</h4>
+		<textarea class="form-control" id="rmk" name="rmk" rows="7" placeholder="글 내용을 입력하여 주세요."></textarea>      
+       <hr>
+       <!-- 버튼 레이아웃  -->
+       <div class="col-md-9">
+		</div>
+		<div class="col-md-3" style="text-align:right">
+			<button class="btn btn-primary" (click)="onSubmit()">등록</button>
+			<button class="btn btn-primary" (click)="onback()">취소</button>
+		</div>
+	</div>
+	
+</div>

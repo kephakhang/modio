@@ -1,0 +1,82 @@
+<div class="container">
+  <div  [hidden]="submitted">
+    <h1 style="font-size:1.2rem; vertical-align:top;"><img src="../../img/mark.jpg"> 콘텐츠 등록</h1>
+    
+    <form *ngIf="active" (ngSubmit)="onSubmit()" #uploadForm="ngForm">
+
+      <input type="hidden" class="form-control" id="mb_id"
+               required
+               name="mbId"
+               value="{{model.mbId}}" >
+      <input type="hidden" class="form-control" id="access_token"
+               required
+               name="mbId"
+               value="{{model.accessToken}}" >
+
+      <div class="form-group">
+        <label for="ca_id">카테고리</label>
+        <select class="form-control frm_input required" id="ca_id" [value]="model.ca_id"  [(ngModel)]="model.caId"
+                required>
+          <option *ngFor="#category of categories" [value]="category.id">{{category.name}}</option>
+        </select>
+        
+        <!--div style="display:none;" class="alert alert-danger">
+          카테고리가 선택되어야 합니다.
+        </div-->
+      </div>
+
+      <div class="form-group">
+        <label for="title">파일</label>
+        <input type="file" class="form-control frm_input required" id="file"
+               required  (change)="selectFile($event)"
+               name="file">
+        <div style="display:none;"
+             class="alert alert-danger">
+          파일을 선택해 주세요.
+        </div>
+      </div>
+      
+      <progressbar [animate]="true" [max]="100" [value]="contentUploader.progress" [type]="info"><b>{{contentUploader.progress}}%</b></progressbar>
+
+      <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" class="form-control frm_input required" id="title"
+               required  minlength="3" [(ngModel)]="model.title"
+               name="title">
+        <!--div style="display:none;"
+             class="alert alert-danger">
+          제목을 입력해 주세요.
+        </div-->
+      </div>
+
+      <div class="form-group">
+        <label for="rmk">설명</label>
+        <textarea class="form-control" id="rmk" [value]="model.rmk"  [(ngModel)]="model.rmk"
+                name="rmk" rows="7">
+        </textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="piracy">저작권 정보</label><br>
+       	<input type="checkbox" id="original_check"> 원본 증명<br/>
+       	<input type="checkbox" id="open_check" [value]="model.open"  [(ngModel)]="model.open" name="open"> 공개 여부
+      </div>
+
+      
+
+      <!--button type="submit" class="btn btn-default" [disabled]="!uploadForm.form.valid">등록</button-->
+      <div class="text-xs-center">
+        <button id="converter_btn" type="submit" class="btn btn-primary" >등록</button>
+      </div>
+
+      <div id='delay' name='delay' style='position:absolute; left:0;top:500%;z-index:5;display:none;width:100%;height:100%'> 
+        <table border='0' cellpadding='0' cellspacing='0' width='100%' height='100%'> 
+          <tr>
+            <td align='center'><img src = "{{setting.hostUrl}}/img/loading_img.gif"></td>
+          </tr> 
+        </table> 
+      </div> 
+
+    </form>
+  </div>
+</div>

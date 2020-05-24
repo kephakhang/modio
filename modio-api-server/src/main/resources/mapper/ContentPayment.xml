@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ContentPayment">
+
+	<resultMap id="result" type="content">
+		<result property="mbId" 		column="mb_id" />
+		<result property="coId" 		column="co_id" />
+		<result property="price" 		column="price" />
+		<result property="regtime" 		column="regtime" />
+	</resultMap>
+	
+	<!-- 컨텐츠 공유 관련 쿼리 START -->
+		
+	<insert id="insert" parameterType="contentPaymentVO" useGeneratedKeys="true" keyProperty="id">
+	INSERT INTO TB_CONTENT_PAYMENT ( 
+					mb_id   ,
+					co_id   ,
+					price	,			
+					regtime )
+	VALUES (
+					#{mb_id}    ,
+					#{co_id}    ,
+					#{price}     ,
+					#{regtime}	
+	)
+	</insert>
+	
+	<update id="update" parameterType="contentPaymentVO" useGeneratedKeys="true" keyProperty="id">
+	UPDATE TB_CONTENT_PAYMENT
+	SET regtime = #{regtime}
+	WHERE mb_id = #{mb_id} AND
+		co_id = #{co_id} AND
+		price = #{price}
+	</update>
+	
+	<delete id="delete" parameterType="contentPaymentVO">
+	    DELETE 	FROM TB_CONTENT_PAYMENT
+	    WHERE	mb_id = #{mb_id} AND
+	 		 	co_id = #{co_id}
+	</delete>
+	
+	<select id="select" parameterType="contentPaymentVO" resultType="contentPaymentVO">
+		SELECT *
+		FROM TB_CONTENT_PAYMENT
+		WHERE mb_id = #{mb_id} AND
+			co_id = #{co_id}
+	</select>
+	
+	<!-- 컨텐츠 공유 관련 쿼리 END -->
+	
+</mapper>

@@ -1,0 +1,190 @@
+<style type="text/css">
+        body {
+		padding: 60px 0px;
+	}
+	#header .navbar-collapse {
+		position: relative;
+		padding-top: 30px !important;
+		max-height: 270px;
+	}
+	#header .navbar-collapse form[role="search"] {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		width: 100%;
+		padding: 0px;
+		margin: 0px;
+		z-index: 0;
+	}
+	#header .navbar-collapse form[role="search"] button,
+	#header .navbar-collapse form[role="search"] input {
+		padding: 8px 12px;
+		border-radius: 0px;
+		border-width: 0px;
+		color: rgb(119, 119, 119);
+		background-color: rgb(248, 248, 248);
+		border-color: rgb(231, 231, 231);
+		box-shadow: none;
+		outline: none;
+	}
+	#header .navbar-collapse form[role="search"] input {
+		padding: 16px 12px;
+		font-size: 14pt;
+		font-style: italic;
+		color: rgb(160, 160, 160);
+		box-shadow: none;
+	}
+	#header .navbar-collapse form[role="search"] button[type="reset"] {
+		display: none;
+	}
+
+	@media (min-width: 768px) {
+		#header .navbar-collapse {
+			padding-top: 0px !important;
+			padding-right: 38px !important;
+		}
+		#header .navbar-collapse form[role="search"] {
+			width: 38px;
+		}
+		.navbar-collapse form[role="search"] button,
+		.navbar-collapse form[role="search"] input {
+			padding: 15px 12px;
+		}
+		#header .navbar-collapse form[role="search"] input {
+			font-size: 18pt;
+			opacity: 0;
+			display: none;            
+            height: 50px;
+		}
+		#header .navbar-collapse form[role="search"].active {
+			width: 100%;
+		}
+		#header .navbar-collapse form[role="search"].active button,
+		#header .navbar-collapse form[role="search"].active input {
+			display: table-cell;
+			opacity: 1;
+		}
+    	#header .navbar-collapse form[role="search"].active input {
+			width: 100%;
+		}
+	}
+    </style>
+    
+    <div id="header" role="banner">	    
+	    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://bootsnipp-env.elasticbeanstalk.com/iframe/Pb5PX#">Brand</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					 <template [ngIf]="accessToken == null">
+				        <li id="t-signup">
+				          <a [routerLink]="['/Signup']"><b>회원가입</b></a>
+				        </li>
+				        <li id="t-signin">
+				          <a [routerLink]="['/Login']"><span><b>로그인</b></span></a>      
+				        </li>
+				      </template>
+				      <template [ngIf]="accessToken != null">
+				      	<li id="t-w3c">
+				          <a href="https://validator.kldp.org/" target="_blank"><b>W3C 평가</b></a>
+				        </li>
+				        <li id="t-exit">
+				          <a [routerLink]="['/Deleteuser']"><b>회원정보 탈퇴</b></a>
+				        </li>
+				        <li id="t-signupdate">
+				          <a [routerLink]="['/Modifieduser']"><b>회원정보 변경</b></a>
+				        </li>
+				        <li id="t-logout">
+				          <a href="#" (click)="logout()"><span><b>로그아웃</b></span></a>      
+				        </li>
+				      </template>
+				
+					 <template [ngIf]="accessToken != null">
+				      <li id="t-upload">
+				        <a [routerLink]="['/Upload']"><span><b>업로드</b></span></a>      
+				      </li>
+				      </template>
+				      
+				
+				      
+				
+				      <li id="t-main">
+				        <a class="" [routerLink]="['/Main']"><b>메인 콘텐츠</b><!--b class="caret"></b--></a>
+				      </li>
+				      
+				      <template [ngIf]="accessToken != null">
+				      <li id="t-content">
+				        <a class="" [routerLink]="['/Mycontents']"><b>나의 콘텐츠</b><!--b class="caret"></b--></a>
+				      </li>
+				      <li id="t-content">
+				        <a class="" [routerLink]="['/Sharecontents']"><b>공유이력</b><!--b class="caret"></b--></a>
+				      </li>
+				      <li id="t-content">
+				        <a class="" [routerLink]="['/Home']"><b>...</b><!--b class="caret"></b--></a>
+				      </li>
+				      </template>
+				</ul>
+				
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://bootsnipp-env.elasticbeanstalk.com/iframe/Pb5PX#">Link</a></li>
+					<li class="dropdown">
+						<a href="http://bootsnipp-env.elasticbeanstalk.com/iframe/Pb5PX#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="http://bootsnipp-env.elasticbeanstalk.com/iframe/Pb5PX#">Action</a></li>
+							<li><a href="http://bootsnipp-env.elasticbeanstalk.com/iframe/Pb5PX#">Another action</a></li>
+							<li><a href="http://bootsnipp-env.elasticbeanstalk.com/iframe/Pb5PX#">Something else here</a></li>
+							<li class="divider"></li>
+							<li><a href="http://bootsnipp-env.elasticbeanstalk.com/iframe/Pb5PX#">Separated link</a></li>
+						</ul>
+					</li>
+				</ul>
+
+				<form class="navbar-form" role="search">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Search">
+						<span class="input-group-btn">
+							<button type="reset" class="btn btn-default">
+								<span class="glyphicon glyphicon-remove">
+									<span class="sr-only">Close</span>
+								</span>
+							</button>
+							<button type="submit" class="btn btn-default">
+								<span class="glyphicon glyphicon-search">
+									<span class="sr-only">Search</span>
+								</span>
+							</button>
+						</span>
+					</div>
+				</form>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+
+
+
+
+  <div id="preloader">
+    <div id="load"></div>
+  </div>
+  
+    <!-- div ng-show="AILoading" class="preloader">
+	    <div id="preloader">
+	    	<div id="load"></div>
+	  	</div>
+    </div-->
+  <div ng-hide="AILoading" ng-view></div>
+
+  </div> <!-- /header -->  
+  <router-outlet></router-outlet>
+

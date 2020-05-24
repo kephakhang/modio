@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+
+	<!-- 일반 게시판 관련 쿼리 START -->
+	
+	<select id="select" parameterType="board" resultType="boardVO">
+		SELECT *
+		FROM tb_board
+		WHERE sn = #{mb_id};
+	</select>
+	
+	
+	<select id="select_list" parameterType="board" resultType="boardVO">
+		SELECT *
+		FROM tb_board
+		limit #{startPoint}, #{endPoint}
+	</select>
+	
+	<insert id="insert" parameterType="board">
+		INSERT INTO tb_board (mb_id, title, rmk)
+		VALUES(#{mb_id}, #{title}, #{rmk});
+	</insert>
+	
+	<update id="update" parameterType="board">
+		UPDATE tb_board
+		SET title = #{title}, rmk = #{rmk}
+		WHERE sn = #{mb_id};
+	</update>
+	
+	<delete id="delete" parameterType="board">
+		DELETE 
+		FROM tb_board
+		WHERE sn = #{mb_id};
+	</delete>
+	
+	<!-- 일반 게시판 관련 쿼리 END -->
+	
+</mapper>

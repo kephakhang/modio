@@ -1,0 +1,1045 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"description": "Modio Service Portal",
+		"version": "1.0.0",
+		"title": "Modio",
+		"termsOfService": "https://10.136.69.104:8080/api/v2",
+		"contact": {
+			"email": "mgkaki@youngplussoft.com"
+		}
+	},
+	"host": "10.136.69.104:8080",
+	"basePath": "/api/v2",
+	"schemes": [
+		"https"
+	],
+	"securityDefinitions": {
+		"Bearer": {
+			"type": "apiKey",
+			"name": "Authorization",
+			"in": "header"
+		}
+	},
+	"tags": [
+		{
+			"name": "Modio",
+			"description": "Mobile Direct Order",
+			"externalDocs": {
+				"description": "Find out more",
+				"url": "https://10.136.69.104:8080/api/v2/index.html"
+			}
+		}
+	],
+	"paths": {
+		"/user": {
+			"post": {
+				"description": "Post `User` object. - 사용자 정보 추가 -\n**User** 은 사용자 정보 입력 파라미터 JSON 이며,\n리턴 값은 성공/실패 여부 판단 값이다.\n",
+				"operationId": "addUser",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "user",
+						"in": "body",
+						"description": "멤버 정보 JSON",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "Put `User` object. - 사용자 정보 수정 - \n**User** 는 사용자 정보 입력 파라미터 JSON 입니다.\n리턴 값은 성공/실패 여부 판단 값입니다.\n",
+				"operationId": "updateUser",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "user",
+						"in": "body",
+						"description": "멤버 정보 JSON",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"get": {
+				"description": "Get `User` object. - 사용자 정보 수신 -\n**id** 는 사용자 아이디(email) 입니다.\n리턴 값은 멤버(User) object 입니다.\n",
+				"operationId": "findUserById",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "사용자 아이디(email)",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/User"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "delete `User` - 사용자 정보 삭제 -\n**id** 는 사용자 아이디(email) 입니다.\n",
+				"operationId": "deleteUser",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "멤버 정보",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/user/login": {
+			"post": {
+				"description": "Check `Login`\n**login** 은 로그인 정보 값이다.\n리턴 값은 성공/실패 여부 판단 값이다.\n",
+				"operationId": "login",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "login",
+						"in": "body",
+						"description": "멤버 정보",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Login"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/user/logout": {
+			"post": {
+				"description": "`Logout`\n리턴 값은 성공/실패 여부 판단 값이다.\n",
+				"operationId": "logout",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": null,
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/user/emailauth": {
+			"get": {
+				"description": "회원 가입 후 이메일 인증\n리턴 값은 성공/실패 여부 판단 값이다.\n",
+				"operationId": "emailAuth",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "멤버 정보",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "email_key",
+						"in": "query",
+						"description": "이메일  인증 키",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/user/mystore": {
+			"get": {
+				"description": "사용자가 방문하거나 북마크한 Store 리스트를 가져온다.\n",
+				"operationId": "getuserMyStore",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": null,
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/MyStore"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/goods": {
+			"post": {
+				"description": "Post `Goods` object. - 음료/음식 상품 정보 추가 -\n**Goods** 은 상품 정보 입력 파라미터 JSON 이며,\n리턴 값은 성공/실패 여부 판단 값이다.\n",
+				"operationId": "addGoods",
+				"consumes": [
+					"multipart/form-data"
+				],
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "file",
+						"in": "formData",
+						"description": "업로드 상품 이미지 파일",
+						"required": true,
+						"type": "file"
+					},
+					{
+						"name": "goods",
+						"in": "body",
+						"description": "상품 정보 JSON",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Goods"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "Put `Goods` object. - 음료/음식 상품 정보 수정 - \n**Goods** 는 상품 정보 입력 파라미터 JSON 입니다.\n리턴 값은 성공/실패 여부 판단 값입니다.\n",
+				"operationId": "updateGoods",
+				"consumes": [
+					"multipart/form-data"
+				],
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "file",
+						"in": "formData",
+						"description": "업로드 상품 이미지 파일",
+						"required": false,
+						"type": "file"
+					},
+					{
+						"name": "goods",
+						"in": "body",
+						"description": "상품 정보 JSON",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Goods"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"get": {
+				"description": "Get `Goods` object. - 상품 정보 수신 -\n**id** 는 상품 아이디 입니다.\n리턴 값은 Goods object 입니다.\n",
+				"operationId": "findGoodsById",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "상품 아이디",
+						"required": true,
+						"format": "integer",
+						"type": "int64"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Goods"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "delete `Goods` - 사용자 정보 삭제 -\n**id** 는 상품 아이디 입니다.\n",
+				"operationId": "deleteGoods",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "상품 ID",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/store": {
+			"post": {
+				"description": "Post `Store` object. - 상점 정보 추가 -\n**Store** 는 상점 정보 입력 파라미터 JSON 이며,\n리턴 값은 성공/실패 여부 판단 값이다.\n",
+				"operationId": "addStore",
+				"consumes": [
+					"multipart/form-data"
+				],
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "file1",
+						"in": "formData",
+						"description": "업로드 상점 이미지 파일1",
+						"required": true,
+						"type": "file"
+					},
+					{
+						"name": "file2",
+						"in": "formData",
+						"description": "업로드 상점 이미지 파일2",
+						"required": false,
+						"type": "file"
+					},
+					{
+						"name": "file3",
+						"in": "formData",
+						"description": "업로드 상점 이미지 파일3",
+						"required": false,
+						"type": "file"
+					},
+					{
+						"name": "store",
+						"in": "body",
+						"description": "Store 정보 JSON",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Store"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Store"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "Put `Store` object. - 상품 정보 수정 - \n**Store** 는 상품 정보 입력 파라미터 JSON 입니다.\n리턴 값은 성공/실패 여부 판단 값입니다.\n",
+				"operationId": "updateStore",
+				"consumes": [
+					"multipart/form-data"
+				],
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "file1",
+						"in": "formData",
+						"description": "업로드 상점 이미지 파일1",
+						"required": false,
+						"type": "file"
+					},
+					{
+						"name": "file2",
+						"in": "formData",
+						"description": "업로드 상점 이미지 파일2",
+						"required": false,
+						"type": "file"
+					},
+					{
+						"name": "file3",
+						"in": "formData",
+						"description": "업로드 상점 이미지 파일3",
+						"required": false,
+						"type": "file"
+					},
+					{
+						"name": "store",
+						"in": "body",
+						"description": "상점 정보 JSON",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Store"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Store"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"get": {
+				"description": "Get `Store` object. - 상점 정보 수신 -\n**id** 는 상점 아이디 입니다.\n리턴 값은 Food object 입니다.\n",
+				"operationId": "findStoreById",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "상점 아이디",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Store"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "delete `Store` - 상점 정보 삭제 -\n**id** 는 상점 아이디 입니다.\n",
+				"operationId": "deleteStore",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "상품 ID",
+						"required": true,
+						"type": "integer",
+						"format": "int64"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"$ref": "#/definitions/Response"
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/store/around": {
+			"get": {
+				"description": "Get `Store` object. - 주위 상점 정보 조희 -\n**Store** 는 상점 정보 JSON 이며,\n리턴 값은 Store List 이다.\n",
+				"operationId": "getAroundStore",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "position",
+						"in": "body",
+						"description": "현제 위치 정보",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/Position"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Store"
+							}
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		},
+		"/store/goods": {
+			"get": {
+				"description": "Get `Goods` object. - 상점의 상품 정보 조희 -\n**Goods** 는 상품 정보 JSON 이며,\n리턴 값은 Goods List 이다.\n",
+				"operationId": "getStoreGoods",
+				"produces": [
+					"application/json",
+					"text/html"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"description": "현제 매장 ID",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Responseful response",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/Goods"
+							}
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"schema": {
+							"$ref": "#/definitions/Error"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"Buy": {
+			"properties": {
+				"sort": {
+					"type": "integer",
+					"format": "int64",
+					"description": "buy(1), change(2)"
+				},
+				"goodsId": {
+					"type": "integer",
+					"format": "int64",
+					"description": "goods ID"
+				},
+				"goodsName": {
+					"type": "string",
+					"description": "goods name"
+				},
+				"storeId": {
+					"type": "integer",
+					"format": "int64",
+					"description": "store ID"
+				},
+				"storeName": {
+					"type": "string",
+					"description": "store name"
+				},
+				"buyDate": {
+					"type": "string",
+					"format": "date-time",
+					"description": "buy date-time"
+				}
+			}
+		},
+		"BuyAtStore": {
+			"properties": {
+				"sort": {
+					"type": "integer",
+					"format": "int64",
+					"description": "buy(1), change(2)"
+				},
+				"storeId": {
+					"type": "integer",
+					"format": "int64",
+					"description": "store ID"
+				},
+				"storeName": {
+					"type": "string",
+					"description": "store name"
+				},
+				"count": {
+					"type": "integer",
+					"format": "int64",
+					"description": "buy count"
+				},
+				"buyDate": {
+					"type": "string",
+					"format": "date-time",
+					"description": "buy date-time"
+				}
+			}
+		},
+		"Store": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int64",
+					"description": "store ID"
+				},
+				"image1": {
+					"type": "string",
+					"description": "image url1"
+				},
+				"image2": {
+					"type": "string",
+					"description": "image url2"
+				},
+				"image3": {
+					"type": "string",
+					"description": "image url3"
+				},
+				"name": {
+					"type": "string",
+					"description": "store name"
+				},
+				"address": {
+					"type": "string",
+					"description": "store address"
+				},
+				"phone": {
+					"type": "string",
+					"description": "store phone number"
+				},
+				"description": {
+					"type": "string",
+					"description": "store description"
+				},
+				"openTime": {
+					"type": "string",
+					"description": "store open time"
+				},
+				"closedDay": {
+					"type": "string",
+					"description": "store closed day"
+				},
+				"regtime": {
+					"type": "string",
+					"format": "date-time",
+					"description": "registration date-time"
+				},
+				"updtime": {
+					"type": "string",
+					"format": "date-time",
+					"description": "update date-time"
+				}
+			}
+		},
+		"MyStore": {
+			"properties": {
+				"frequentStore": [
+					{
+						"$ref": "#/definitions/Store"
+					}
+				],
+				"bookmarkStor": [
+					{
+						"$ref": "#/definitions/Store"
+					}
+				]
+			}
+		},
+		"Goods": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int64",
+					"description": "goods ID"
+				},
+				"image": {
+					"type": "string",
+					"description": "image url"
+				},
+				"caId": {
+					"type": "integer",
+					"format": "int64",
+					"description": "goods 카테고리 아이디"
+				},
+				"caName": {
+					"type": "string",
+					"description": "goods 카테고리 명"
+				},
+				"name": {
+					"type": "string",
+					"description": "goods' name"
+				},
+				"engName": {
+					"type": "string",
+					"description": "goods name as english"
+				},
+				"price": {
+					"type": "integer",
+					"format": "int64",
+					"description": "goods price"
+				},
+				"regtime": {
+					"type": "string",
+					"format": "date-time",
+					"description": "registration date-time"
+				},
+				"updtime": {
+					"type": "string",
+					"format": "date-time",
+					"description": "update date-time"
+				}
+			}
+		},
+		"Position": {
+			"properties": {
+				"lat": {
+					"type": "integer",
+					"format": "int64",
+					"description": "gps latitude"
+				},
+				"lon": {
+					"type": "integer",
+					"format": "int64",
+					"description": "gps longitude"
+				}
+			}
+		},
+		"Test": {
+			"properties": {
+				"test1": {
+					"type": "string",
+					"description": "test string data1"
+				},
+				"test2": {
+					"type": "string",
+					"description": "test string data2"
+				}
+			}
+		},
+		"Login": {
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "사용자 아이디(email)"
+				},
+				"password": {
+					"type": "string",
+					"format": "password",
+					"description": "사용자 암호"
+				}
+			}
+		},
+		"Logout": {
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "사용자 아이디(email)"
+				},
+				"accessToken": {
+					"type": "string",
+					"format": "password",
+					"description": "사용자 접근 토큰"
+				}
+			}
+		},
+		"User": {
+			"properties": {
+				"id": {
+					"type": "string",
+					"description": "사용자 아이디(email)"
+				},
+				"accessToken": {
+					"type": "string",
+					"description": "세션 접근 허가"
+				},
+				"emailKey": {
+					"type": "string",
+					"description": "이메일 인증 키"
+				},
+				"password": {
+					"type": "string",
+					"format": "password",
+					"description": "사용자 암호"
+				},
+				"level": {
+					"type": "integer",
+					"format": "int64",
+					"description": "사용자 타입(1-일반 2-제휴 10-관리자)"
+				},
+				"name": {
+					"type": "string",
+					"description": "사용자 이름"
+				},
+				"mobile": {
+					"type": "string",
+					"description": "사용자 휴대 전화번호"
+				},
+				"birth": {
+					"type": "string",
+					"description": "사용자 생년월일"
+				},
+				"regtime": {
+					"type": "string",
+					"format": "date-time",
+					"description": "사용자 등록 시각"
+				},
+				"updtime": {
+					"type": "string",
+					"format": "date-time",
+					"description": "사용자 수정 시각"
+				}
+			}
+		},
+		"GoodsCategory": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int64",
+					"description": "카테고리 아이디"
+				},
+				"name": {
+					"type": "string",
+					"description": "상품 카테고리 명"
+				},
+				"subname": {
+					"type": "string",
+					"description": "상품 서브 카테고리 명"
+				}
+			}
+		},
+		"StoreCategory": {
+			"properties": {
+				"id": {
+					"type": "integer",
+					"format": "int64",
+					"description": "카테고리 아이디"
+				},
+				"name": {
+					"type": "string",
+					"description": "상품 카테고리 명"
+				},
+				"subname": {
+					"type": "string",
+					"description": "상품 서브 카테고리 명"
+				}
+			}
+		},
+		"Response": {
+			"properties": {
+				"retcode": {
+					"type": "integer",
+					"format": "int64",
+					"description": "응답 리턴 값"
+				},
+				"message": {
+					"type": "string",
+					"description": "응답 메세지"
+				},
+				"id": {
+					"type": "string",
+					"description": "사용자 아이디"
+				},
+				"level": {
+					"type": "integer",
+					"format": "int64",
+					"description": "사용자 레벨"
+				}
+			}
+		},
+		"Error": {
+			"properties": {
+				"errcode": {
+					"type": "integer",
+					"format": "int64",
+					"description": "에러 코드 번호"
+				},
+				"message": {
+					"type": "string",
+					"description": "에러 메세지"
+				},
+				"rawMessage": {
+					"type": "string",
+					"description": "Raw 에러 메세지"
+				}
+			}
+		}
+	}
+}

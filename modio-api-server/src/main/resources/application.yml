@@ -1,0 +1,139 @@
+spring:
+  profiles:
+    active: local
+  session:
+    store-type: none
+  messages:
+    basename: messages/messages
+  mvc:
+    dispatch-options-request: true
+  data:
+    mongodb:
+      #uri: mongodb://localhost/
+      host: localhost
+      port: 27017
+      database: modio
+      username: modio
+      password: modio
+      repositories.enabled: true
+  http:
+    multipart:
+      maxFileSize: 100Mb
+      maxRequestSize: 100Mb
+      location: '/Users/peter/Documents/Modio/upload'
+      fileSizeThreshold: 0
+    velocity:
+      resource-loader-path: classpath:/templates/
+
+server:
+  port: 7777
+  tomcat.max-http-header-size: 104857600
+  ssl:
+    key-store: './https-cert/youngplussoft_com.jks'
+    key-store-password: '123Yps#@!'
+    key-password: '123Yps#@!'
+#    key-alias: 'youngplussoft.com'
+    trust-store: './https-cert/modioTrustStore.key'
+    trust-store-password: '123Yps#@!'
+#
+#log4j:
+#  appender:
+#    RUN: org.apache.log4j.DailyRollingFileAppender
+#    RUN.File: ./logs/RUN.log 
+#    RUN.layout: org.apache.log4j.PatternLayout
+#    RUN.layout.ConversionPattern: "%d{dd MMM yyyy HH:mm:ss,SSS} -- %p %t %c - %m%n"
+#  rootLogger: DEBUG, RUN
+#  logger:
+#    root: INFO, RUN
+#    org:
+#      thymeleaf: DEBUG, RUN
+#      hibernate: INFO, RUN
+#      springframework:
+#        web: INFO, RUN
+#        data.mongodb.core.MongoTemplate: DEBUG, RUN
+#    com.youngplussoft: DEBUG, RUN
+#    java.sql:
+     
+logging:
+#  path: ./logs/
+  file: ./logs/RUN.log
+  pattern.file: RUN.%d{yyyyMMdd}.log
+  level:
+    root: INFO
+    org:
+      hibernate: INFO
+      springframework:
+        web: INFO
+        data.mongodb.core.MongoTemplate: DEBUG
+    com.youngplussoft: DEBUG
+    java.sql:
+      Statement: DEBUG
+      PreparedStatement: DEBUG
+
+#modio settings
+modio:
+  upload.location: /Users/peter/Documents/Modio/upload
+  image.location: /Users/peter/Documents/Modio/images
+  home.url: http://modio.kr
+  remail:
+    type: pop3
+    receiver: 'mgkaki@youngplussoft.com'
+    server: yally.com
+    user: mgkaki
+    password: '123mgk#@!'
+    protocol: pop
+    port: 110
+    ssl: false
+    tmp: /tmp/
+  api:
+    base.url: /api/v3
+
+
+
+#
+# JPA (JpaBaseConfiguration, HibernateJpaAutoConfiguration)
+#spring.jpa:
+#  database: MYSQL
+#  database-platform:
+#  generate-ddl: false
+#  show-sql: true
+#  open-in-view: true
+#  repositories.enabled: true
+## Hibernate settings are prefixed with spring.jpa.hibernate.*
+#  hibernate:
+#    ddl-auto: update
+#    dialect: org.hibernate.dialect.MySQL5Dialect
+#    naming:
+#      implicit-strategy:
+#      physical-strategy:
+#      strategy:
+#      strategy: org.hibernate.cfg.ImprovedNamingStrategy
+#      use-new-id-generator-mappings:
+#    show_sql: true
+#    format_sql: true
+
+#endpoints.shutdown.enabled=false
+
+#
+#spring.datasource.schema=import.sql
+#mybatis:
+#  config-location: 'classpath:mybatis-config.xml'
+#    io.swagger: DEBUG
+#    org.apache.ibatis: DEBUG
+#    org.mybatis: DEBUG
+#    org.apache.ibatis=DEBUG
+
+
+#logging.config=classpath:logback-spring.xml
+#
+
+#spring.mvc.view.prefix=/WEB-INF/jsp/
+#spring.mvc.view.suffix=.jsp
+# MULTIPART (MultipartProperties)
+
+
+---
+spring:
+  profiles: dev
+  velocity:
+    resource-loader-path: classpath:/templates/

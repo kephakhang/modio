@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>share secure viewer</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			#full_window {
+				position: fixed;
+				z-index:4;
+				width: 2rem;
+				right: 20px; 
+				bottom: 20px;
+			}
+			#oauth_img {
+				position: fixed;
+				z-index:4;
+				width: 5rem;
+				right: 20px; 
+				top: 20px;
+			}
+			#setting_btn {
+				position: fixed;
+				z-index:4;
+				width: 3rem;
+				right: 5rem; 
+				bottom: 10px;
+			}
+			#original_btn {
+				position: fixed;
+				z-index:4;
+				width: 4rem;
+				right: 25rem; 
+				bottom: 5rem;
+			}
+			#wiremesh_btn {
+				position: fixed;
+				z-index:4;
+				width: 5rem;
+				right: 20rem; 
+				bottom: 5rem;
+			}
+			#flatmesh_btn {
+				position: fixed;
+				z-index:4;
+				width: 5rem;
+				right: 15rem; 
+				bottom: 5rem;
+			}
+			#gourmesh_btn {
+				position: fixed;
+				z-index:4;
+				width: 5rem;
+				right: 10rem; 
+				bottom: 5rem;
+			}
+			#phongmesh_btn {
+				position: fixed;
+				z-index:4;
+				width: 5rem;
+				right: 5rem; 
+				bottom: 5rem;
+			}
+			#myProgress {
+			  z-index:4;
+			  position: absolute; 
+			  left: 50%; 
+			  transform: translateX(-50%);
+			  margin-top:28%;
+			  width: 30%;
+			  height: 2%;
+			  background-color: #fff;
+			  align = center;
+			}
+
+			#myBar {
+			  position: absolute;
+			  width: 10%;
+			  height: 100%;
+			  background-color: #4CAF50;
+			}
+
+			#label {
+			  text-align: center;
+			  line-height: 15px;
+			  color: black;
+			}
+		</style>
+	</head>
+
+	<body onkeydown="keyEvent(event)">
+		<div id="myProgress">
+		  <div id="myBar">
+			<div id="label">Loading</div>
+		  </div>
+		</div>
+	
+		<!--<image src="img/fullwindow_btn.png" onclick="fullscreen()" id="full_window"></image> 임시로 가려놓음. 에러가 너무 많음.-->
+		<!-- <image src="img/oauth.png" id="oauth_img"></image> 
+		<image src="img/setting.png" onclick="setting_call()" id="setting_btn"></image>
+		
+		<image src="img/original.png" onclick="original_call()" id="original_btn"></image>
+		<image src="img/wiremesh.png" onclick="wiremesh_call()" id="wiremesh_btn"></image>
+		<image src="img/flatmesh.png" onclick="flatmesh_call()" id="flatmesh_btn"></image>
+		<image src="img/gourmesh.png" onclick="gourmesh_call()" id="gourmesh_btn"></image>
+		<image src="img/phongmesh.png" onclick="phongmesh_call()" id="phongmesh_btn"></image> -->
+		
+		<!-- <canvas id="myCanvas" style="border: 1px solid #000;"> -->
+		<canvas id="myCanvas">
+		Your browser does not support the HTML5 canvas tag.
+		</canvas>
+		
+		<script src="lib/serverside/three.js"></script>
+		<!-- 움직임 라이브러리(회전 줌인 이동) -->
+		<script src="lib/serverside/OrbitControls.js"></script>
+		<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+		<script src="/js/jquery-1.8.3.min.js"></script>
+		<script src="lib/dat.gui.min.js"></script>
+		
+		<script>
+			hostUrl = "http://119.195.163.135:3380" ; 
+			//mesh변경 버튼들을 감춤
+/*			document.getElementById("original_btn").style.display = "none";
+			document.getElementById("wiremesh_btn").style.display = "none";
+			document.getElementById("flatmesh_btn").style.display = "none";
+			document.getElementById("gourmesh_btn").style.display = "none";
+			document.getElementById("phongmesh_btn").style.display = "none";*/
+		
+			//원본증명 유무에 따라 보여줄 이미지
+//			var oauth_img = document.getElementById("oauth_img");
+			
+			var window_size_check = true;
+		
+			//그림을 실시간으로 그릴 캔버스 초기화
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			
+			//캔버스 전체크기
+			c.width=window.innerWidth - 19.5;
+			c.height=window.innerHeight - 19.5;
+			
+			//전체화면 전의 크기를 기억하기위한 변수들
+			var ori_width = c.width;
+			var ori_height = c.height;
+			
+			var image = new Image();
+			
+			//URL 데이터 파싱
+			var params = getUrlParams();
+			
+			var params_uuid = new Array();
+			console.log("uuid(viewer_share.html) : " + params.uu);
+			var params_uuid = params.uu.split("||");
+			console.log("uuid(viewer_share.html) : " + params_uuid[0]);
+			console.log("email(viewer_share.html) : " + params_uuid[1]);
+			console.log("where(viewer_share.html) : " + params_uuid[2]);
+			params.uu = params_uuid[0];
+			var email = params_uuid[1];
+			var where = params_uuid[2];
+			var original = params_uuid[3];
+			
+			if( where == 'Email' ) {
+				callTracking(params.uu, email, original) ;
+			}
+			
+			//원본증명 유무에 따라 이미지 유무
+			/*
+			if(original == "0") {
+				oauth_img.style.display = 'none';
+			}
+			else {
+				oauth_img.style.display = 'block';
+			}
+			*/
+			/*
+				이력정보 전송
+			*/
+			var traking_xhr = new XMLHttpRequest();
+			var traking_url = 'http://119.195.163.135:3380/api/v2/content/tracking/' + params.uu + '/' + email + '/' + where;
+			traking_xhr.onreadystatechange = function() {
+				if(traking_xhr.readyState == 4) {
+					if(traking_xhr.state == 200) {
+						console.log("traking : " + traking_xhr.response);
+					}
+					else {
+						console.log("traking error : " + traking_xhr.response);
+					}
+				}
+			};
+			traking_xhr.open('GET', traking_url, true);
+			traking_xhr.send(null);
+			
+			//카메라객체 초기화
+			camera = new THREE.PerspectiveCamera( 10, window.innerWidth / window.innerHeight, 1, 100000 );
+			controls = new THREE.OrbitControls( camera, c );
+			controls.target.set( 1, 1, 1 );
+			
+			//call Tracking
+			function callTracking(uuid, email, original) {
+				
+				if( original === undefined || original === null )
+					original = "0" ;
+				
+				jQuery.post(hostUrl + "/api/v2/content/emailtracking", 
+						{uuid: uuid, email: email, original:original}, 
+						function(result){
+			        	console.log(result) ;
+			    });
+			}
+			
+			//UUID 생성 메소드
+			function guid() {
+				function s4() {
+					return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+				}
+				return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
+			}
+			
+			function setupGui() {
+				effectController = {
+					Shading: "원본",
+					Wire: "와이어 지우기"
+				};
+			
+				var gui = new dat.GUI();				
+				h = gui.add( effectController, "Shading", [ "원본", "각진 표현", "부드러운 표현", "광택 표현"] ).name( "재질 표현" ).onChange( render );
+				h = gui.add( effectController, "Wire", [ "와이어 지우기", "와이어 그리기"] ).name( "와이어 표현" ).onChange( render );
+			}
+			
+			//서버로부터 call code를 받기 위한 별도의 uuid를 만든다.
+			var uuid = guid();
+			var call_code;
+			console.log('uuid : ' + uuid);
+			
+			//우측 상단 메뉴를 생성한다.
+			setupGui();
+			
+			//socket io 통신
+			var myIoSocket = io.connect('http://119.195.163.135:3000');
+						
+			//call code를 받기위한 이벤트
+			myIoSocket.on(uuid, function(data){
+				call_code = data;
+				console.log('call_code :' + call_code);
+				
+				//컨트롤 객체에 socketio 객체와 call code uuid 코드를 넘겨준다.
+				controls.setSocketIO(myIoSocket, call_code);
+				
+				var code = new Array();
+				code.push({code:"1"});	//image code
+				code.push({img:"connect"});
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);
+				console.log('code 1 send..');
+			});
+			
+			myIoSocket.on('image', function(data){
+				if(data == "discon") {					
+					//연결 종료 이미지 셋팅 후 적용
+					alert("장시간 조작이 없어 뷰어연결을 종료합니다. 새로고침(F5) 버튼을 누르세요.");
+				}
+				else {
+					image.src = data;  
+					ctx.drawImage(image, 0, 0);
+					console.log('image;');
+				}
+			});	
+			
+			myIoSocket.on('loading', function(data){
+				console.log(data + '%');
+				if(data == "100") {
+					setTimeout("load_original_picture()", 1000);
+					/*
+					move(data, true);
+					var code = new Array();
+					code.push({code:"2"});	//image code
+					code.push(
+								{
+									clientX:"original",
+									clientY:"original",
+									type:"original"
+								}
+							);
+					code.push({call_code:call_code});
+					myIoSocket.emit('join', code);
+					*/
+				}
+				else {
+					move(data, false);
+				}
+			});	
+			
+			function load_original_picture() {
+				move(100, true);
+				var code = new Array();
+				code.push({code:"2"});	//image code
+				code.push(
+							{
+								clientX:"original",
+								clientY:"original",
+								type:"original"
+							}
+						);
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);
+			}
+			
+			console.log(this.params.uu);
+			//서버로부터 call code를 받기 위한 별도의 uuid를 포함시켜 보낸다.
+			var code = new Array();
+			code.push({code:"0"});	//uuid code
+//			code.push({uuid:"mC7DKsayRYujRCdZjFymGg"});
+			code.push({uuid:params.uu});
+			code.push({call_code:uuid});
+			code.push({width:innerWidth});
+			code.push({height:innerHeight});
+			myIoSocket.emit('join', code);
+			
+			var loading_code = new Array();
+			loading_code.push({code:"3"});	//loading
+			loading_code.push({loading:"-1"});
+			loading_code.push({call_code:uuid});
+			myIoSocket.emit('join', loading_code);
+			
+			function getUrlParams() {
+			    var params = {};
+			    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) { params[key] = value; });
+			    return params;
+			} 
+			
+			var elem = document.getElementById("myBar");
+			var myProg = document.getElementById("myProgress");
+			function move(width, clean_val) {
+			  frame();
+			  //타이머 이벤트 등록
+//			  var id = setInterval(frame, 30);
+			  function frame() {
+				if (clean_val == true) {
+				  
+				  
+				  //로딩바 삭제.
+				  myProg.style.display = "none";
+				  
+				  //타이머 이벤트 해제
+//				  clearInterval(id);				  
+				} else {
+//				  clearInterval(id);
+				  elem.style.width = width + '%';
+				  document.getElementById("label").innerHTML = width * 1  + '%';
+				}
+			  }
+			}
+			
+			function fullscreen() {
+				//전체화면시 resize를 위한 서버요청
+				/*
+				var code = new Array();
+				code.push({code:"2"});	//image code
+				code.push(
+							{
+								detail:event.detail,
+								wheelDelta:event.wheelDelta,
+								deltaX:event.deltaX
+							}
+						);
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);*/
+			
+				if (
+					!document.fullscreenElement &&    // alternative standard method
+					!document.mozFullScreenElement && !document.webkitFullscreenElement
+				){  // current working methods
+					if (document.documentElement.requestFullscreen) {
+						document.documentElement.requestFullscreen();
+					}
+					else if (document.documentElement.mozRequestFullScreen) {
+					  document.documentElement.mozRequestFullScreen();
+					}
+					else if (document.documentElement.webkitRequestFullscreen) {
+					  document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+					}
+					
+					
+				}
+				else {
+					if (document.cancelFullScreen) {
+						document.cancelFullScreen();
+					}
+					else if (document.mozCancelFullScreen) {
+						document.mozCancelFullScreen();
+					}
+					else if (document.webkitCancelFullScreen) {
+						document.webkitCancelFullScreen();
+					}
+					
+					
+				}	
+				if(window_size_check == true) {
+					//전체화면시 캔버스 resize
+					c.width=parent.window.innerWidth - 25;
+					c.height=parent.window.innerHeight + 100;
+					
+					var code = new Array();
+					code.push({code:"2"});	//image code
+					code.push(
+								{
+									clientX:c.width,
+									clientY:c.height,
+									type:"fullwindow"
+								}
+							);
+					code.push({call_code:call_code});
+					myIoSocket.emit('join', code);
+					
+					window_size_check = false;
+					
+					
+				}
+				else {
+					//전체화면 취소시 캔버스 resize
+					c.width=ori_width;
+					c.height=ori_height;
+					
+					var code = new Array();
+					code.push({code:"2"});	//image code
+					code.push(
+								{
+									clientX:c.width,
+									clientY:c.height,
+									type:"fullwindow"
+								}
+							);
+					code.push({call_code:call_code});
+					myIoSocket.emit('join', code);
+					
+					window_size_check = true;
+				}
+				
+			}
+			
+			var before_text_shading = effectController.Shading;
+			var before_text_wire = effectController.Wire;
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+			
+			function render() {
+				if(before_text_shading != effectController.Shading) {
+					console.log(before_text_shading + ' ' + effectController.Shading);
+					if(effectController.Shading == '원본') {
+						original_call();
+					}
+					else if(effectController.Shading == '각진 표현') {
+						flatmesh_call();
+					}
+					else if(effectController.Shading == '부드러운 표현') {
+						gourmesh_call();
+					}
+					else if(effectController.Shading == '광택 표현') {
+						phongmesh_call();
+					}
+					else {
+						
+					}
+				}
+				before_text_shading = effectController.Shading;
+				
+				if(before_text_wire != effectController.Wire) {
+					console.log(before_text_wire + ' ' + effectController.Wire);
+					if(effectController.Wire == '와이어 지우기') {
+						wiremesh_call();
+					}
+					else if(effectController.Wire == '와이어 그리기') {
+						wiremesh_call();
+					}
+					else {
+						
+					}
+				}
+				before_text_wire = effectController.Wire;
+			}
+			
+			/*
+			function setting_call() {
+				if(document.getElementById("wiremesh_btn").style.display == "block") {
+					document.getElementById("original_btn").style.display = "none";
+					document.getElementById("wiremesh_btn").style.display = "none";
+					document.getElementById("flatmesh_btn").style.display = "none";
+					document.getElementById("gourmesh_btn").style.display = "none";
+					document.getElementById("phongmesh_btn").style.display = "none";
+				}
+				else {
+					document.getElementById("original_btn").style.display = "block";
+					document.getElementById("wiremesh_btn").style.display = "block";
+					document.getElementById("flatmesh_btn").style.display = "block";
+					document.getElementById("gourmesh_btn").style.display = "block";
+					document.getElementById("phongmesh_btn").style.display = "block";
+				}
+			}
+			*/
+			
+			function original_call() {
+				var code = new Array();
+				code.push({code:"2"});	//image code
+				code.push(
+							{
+								clientX:"original",
+								clientY:"original",
+								type:"original"
+							}
+						);
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);
+			}
+			
+			function wiremesh_call() {
+				var code = new Array();
+				code.push({code:"2"});	//image code
+				code.push(
+							{
+								clientX:"",
+								clientY:"",
+								type:"wiremesh"
+							}
+						);
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);
+			}
+			
+			function flatmesh_call() {
+				var code = new Array();
+				code.push({code:"2"});	//image code
+				code.push(
+							{
+								clientX:"",
+								clientY:"",
+								type:"flatmesh"
+							}
+						);
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);
+			}
+			
+			function gourmesh_call() {
+				var code = new Array();
+				code.push({code:"2"});	//image code
+				code.push(
+							{
+								clientX:"",
+								clientY:"",
+								type:"gourmesh"
+							}
+						);
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);
+			}
+			
+			function phongmesh_call() {
+				var code = new Array();
+				code.push({code:"2"});	//image code
+				code.push(
+							{
+								clientX:"",
+								clientY:"",
+								type:"phongmesh"
+							}
+						);
+				code.push({call_code:call_code});
+				myIoSocket.emit('join', code);
+			}
+			
+			//esc로 종료했을 경우 문제가 많음. iframe으로 홏ㄹ했을경우 resize를 어떻게할 것인가를 고민해야 함.
+			function keyEvent(event) {
+				console.log(event.keyCode);
+				if (event.keyCode == '27') {
+					if(window_size_check == false) {
+						//전체화면 취소시 캔버스 resize
+						c.width=ori_width;
+						c.height=ori_height;
+						window_size_check = true;
+					}
+				}
+			}
+		</script>
+
+	</body>
+</html>
